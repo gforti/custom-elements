@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    </head>
+    <body>
+        <user-card username="6">TODO write content</user-card>
+        <user-card>TODO write content</user-card>
+        <user-card>TODO write content</user-card>
+        
+        <script src="fetch.js"></script>
+        <script src="user-card.js" async defer></script>
+        <script async defer>
+            
+           /* setInterval(()=>{
+                document.querySelectorAll('user-card').forEach(item => item.setAttribute('username', Math.floor(Math.random() * Math.floor(10)) ))
+            }, 5000)
+            
+            setTimeout(()=>{
+                let fragment = document.createDocumentFragment();
+                let card = document.querySelector('user-card[username]')
+                       
+                //fragment.appendChild(card.cloneNode(true));
+                //card.remove()
+                
+                fragment.appendChild(card);
+                
+                document.body.appendChild(fragment)
+            }, 1000) */
+            
+            
+            
+            httpFetch.get('todo.json')
+                .then( data => {
+                    return data.map(row=>`<user-card
+                        ${Object.keys(row).map(key => `${key}="${row[key]}"`).join(' ')}                        
+                    ></user-card>`).join('')
+                })
+                .then( str => {
+                    console.log(str)
+                    document.body.insertAdjacentHTML('beforeend',str)      
+                })
+           
+            
+            </script>
+            
+    </body>
+</html>
