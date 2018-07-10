@@ -20,10 +20,14 @@ and open the template in the editor.
         <script src="user-card.js" async defer></script>
         <script async defer>
             
-           /* setInterval(()=>{
-                document.querySelectorAll('user-card').forEach(item => item.setAttribute('username', Math.floor(Math.random() * Math.floor(10)) ))
+            setInterval(()=>{
+                document.querySelectorAll('user-card').forEach(item => {
+                item.setAttribute('data-id', Math.floor(Math.random() * Math.floor(10)) )
+                item.setAttribute('data-completed', Math.floor(Math.random() * Math.floor(10)) )
+                item.setAttribute('data-title', Math.floor(Math.random() * Math.floor(10)) )
+            })
             }, 5000)
-            
+            /*
             setTimeout(()=>{
                 let fragment = document.createDocumentFragment();
                 let card = document.querySelector('user-card[username]')
@@ -41,7 +45,7 @@ and open the template in the editor.
             httpFetch.get('todo.json')
                 .then( data => {
                     return data.map(row=>`<user-card
-                        ${Object.keys(row).map(key => `${key}="${row[key]}"`).join(' ')}                        
+                        ${Object.keys(row).map(key => `data-${key}="${row[key]}"`).join(' ')}                        
                     ></user-card>`).join('')
                 })
                 .then( str => {
