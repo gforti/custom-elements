@@ -22,9 +22,9 @@ and open the template in the editor.
             
             setInterval(()=>{
                 document.querySelectorAll('user-card').forEach(item => {
-                item.setAttribute('data-id', Math.floor(Math.random() * Math.floor(10)) )
-                item.setAttribute('data-completed', Math.floor(Math.random() * Math.floor(10)) )
-                item.setAttribute('data-title', Math.floor(Math.random() * Math.floor(10)) )
+                    item.dataset.id = Math.floor(Math.random() * Math.floor(10))
+                    item.dataset.completed = Math.floor(Math.random() * Math.floor(10))
+                    item.dataset.title = Math.floor(Math.random() * Math.floor(10))
             })
             }, 5000)
             /*
@@ -51,6 +51,9 @@ and open the template in the editor.
                 .then( str => {
                     console.log(str)
                     document.body.insertAdjacentHTML('beforeend',str)      
+                })
+                        .catch((err) => {
+                            document.body.insertAdjacentHTML('beforeend','<p>sorry data not found</p>')      
                 })
            
             
