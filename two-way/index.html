@@ -5,9 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-        <div>TODO write content</div>
-        
+    <body>                
         <todo-list data-userid="hi"></todo-list>
         
         <todo-item>
@@ -15,36 +13,12 @@
             <p> Pretty much everything inside</p>
         </todo-item>
     
-        <script src="todo-list.element.js"></script>
-        <script src="todo-item.element.js"></script>
+        <script src="todo-list.element.js" defer=""></script>
+        <script src="todo-item.element.js" defer></script>
         <script src="fetch.js"></script>
         <script src="todo.service.js"></script>
-        <script> 
-            
-            (async () => { 
-                const undefinedElements = document.querySelectorAll(':not(:defined)');
-
-                const promises = [...undefinedElements].map(
-                  button => customElements.whenDefined(button.localName)
-                );
-
-                // Wait for all the children to be upgraded, 
-                // then remove the placeholder.
-                await Promise.all(promises);
-                            
+        <script src="custom-elements.loaded.js"></script>
+        <script src="todo.controller.js"></script>
                 
-                
-                const todoService = new TodoService()
-                await todoService.fetchTodos()
-                console.log(todoService.getTodos())
-                console.log('ready!');
-                let todo = document.querySelector('todo-list')
-                todo.listRender(todoService.getTodos())
-               
-                })()
-              
-            </script>
-        
-        
     </body>
 </html>

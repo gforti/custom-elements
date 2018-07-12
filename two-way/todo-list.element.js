@@ -54,7 +54,13 @@
 
     connectedCallback() {
         console.log('Custom square element added to page.');
+        this.btnSubmit.addEventListener('click', this.submitTodoItem.bind(this))
         this.render()
+    }
+    
+    submitTodoItem() {
+             console.log('this.todoInput.value', this.todoInput)
+        this.dispatchEvent(new CustomEvent('add-todo', { detail: this.todoInput.value }))
     }
 
     adoptedCallback() {
@@ -80,8 +86,7 @@
         this.todoListDisplay.innerText = this.userid;
     }
     
-    listRender(todos) {       
-        
+    listRender(todos) {
         this.todoListDisplay.innerHTML = `${todos.map(title => `<todo-item>${title}</todo-item>`).join(' ')}`
     }
 
