@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>TODO write content</div>
+        
+        <a href="africa">Africa</a>
+        <a href="asia">Asia</a>
+        <a href="europe">Europe</a>
+        <a href="north-america">North America</a>
+        <a href="oceania">Oceania</a>
+        <a href="south-america">South America</a>
+        
+        <script>
+            // https://zinoui.com/blog/single-page-apps-html5-pushstate
+            // https://medium.com/@george.norberg/history-api-getting-started-36bfc82ddefc
+            // https://css-tricks.com/using-the-html5-history-api/
+            var routes = (function(history){
+
+                var pushState = history.pushState;
+                history.pushState = function(state) {
+                        typeof(history.onpushstate) == "function" && history.onpushstate({state: state});
+                        setTimeout(routes.check, 10);
+                        return pushState.apply(history, arguments);
+                };
+
+                var routes = {
+                        root: '/',
+                        routes: [],
+                        alwaysFunc:function(){},
+                        config: function(options) {
+                                for(option in options)
+                                        this[option] = options[option];
+                                return this;
+                        },
+                        on: function(re, handler) {
+                                this.routes.push({ re: re, handler: handler});
+                                return this;
+                        },
+                        default: function(handler) {
+                                this.routes.push({ re: '', handler: handler});
+                                return this;
+                        },
+                        check: function(f) {
+                                var root = routes.clean(routes.root);
+                                var	path = decodeURI(location.pathname);
+                                path = routes.clean(path);
+                                path = routes.clean(path.replace(new RegExp("^"+root), ''));
+                                console.log('pushChange', root, path);
+                                for(var i=0; i<routes.routes.length; i++) {
+                                        var match = path.match(routes.routes[i].re);
+                                        if(match) {
+                                                match.shift();
+                                                routes.routes[i].handler.apply({}, [match]);
+                                                break;
+                                        }
+                                }
+                                routes.alwaysFunc(path);
+                                return routes;
+                        },
+                        clean: function(path) {
+                                return path.replace(/\/$/, '').replace(/^\//, '');
+                        },
+                        always: function(func){ this.alwaysFunc = func; }
+                };
+
+                window.addEventListener('popstate', routes.check);
+                window.addEventListener('DOMContentLoaded', routes.check);
+
+                return routes;
+
+        })(window.history);
+        
+        // window.history.pushState({}, '', 'products');
+        
+        
+        routes
+	.config({ root: '/' })
+	.on('article/(.*)', function(match) {
+		document.title = 'Blog article: ' + match[0];
+	})
+	.on('(contact|sayhello)', function(match) {
+		document.title = 'RegExp example: ' + match[0];
+	})
+	.on('(africa|asia)', function(match) {
+		console.log('matched', match[0])
+	})
+	.default(function() {
+		document.title = 'Home';
+	})
+	.always(function() {
+		console.log('Router in action!');
+	})
+        
+        document.querySelector('[href="africa"]').addEventListener('click', function(e){
+            console.log('clicked link', this.href)
+            e.preventDefault();
+            window.history.pushState({}, '', this.href);
+        })
+        
+        console.log(document.querySelector('[href="africa"]'))
+        
+        
+        </script>
+    </body>
+</html>
