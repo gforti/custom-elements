@@ -7,16 +7,25 @@
     </head>
     <body>
         <div>TODO write content</div>
+        
+        
                 
     <route-link data-page="test">testing</route-link>
     <route-link data-page="test/1/cool">testing1</route-link>
     <route-link data-page="test/s2">testing2</route-link>
         
-        <script src="route-link.element.js">
+        
+        <script src="route-link.element.js" defer></script>
+        <script src="router.service.js"></script>
+        <script src="custom-elements.loaded.js"></script>
+        
         <script>
             // https://zinoui.com/blog/single-page-apps-html5-pushstate
             // https://medium.com/@george.norberg/history-api-getting-started-36bfc82ddefc
             // https://css-tricks.com/using-the-html5-history-api/
+            
+            
+            /*
             var routes = (function(history){
 
                 var pushState = history.pushState;
@@ -97,11 +106,26 @@
         document.querySelectorAll('[href]').forEach( link => link.addEventListener('click', function(e){
             console.log('clicked link', this.href)
             e.preventDefault();
-            window.history.pushState({}, '', this.href);
+            routerService.goto(this.href)
+           // window.history.pushState({}, '', router.this.href);
         }))
         
         console.log(document.querySelector('[href="africa"]'))
+        */
         
+        
+       
+        
+        window.addEventListener('customElementsDefined', async ()=> {
+            
+           const routerService = new RouterService()
+                        
+           document.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', function(e){
+                routerService.goto(e.detail)
+            }))
+            
+        })
+       
         
         </script>
     </body>

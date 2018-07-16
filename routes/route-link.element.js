@@ -20,18 +20,19 @@
     }
 
     connectedCallback() {
-        console.log('Custom square element added to page.');
         this.link.addEventListener('click', this.activateRoute.bind(this))
         this.render()
     }
     
     activateRoute(e) {
-             
-        console.log('clicked link', this.page)
+        this.dispatchEvent(new CustomEvent('route-clicked', { detail: this.page }))
+        // console.log('clicked link', this.page)
         e.preventDefault();
-        let path = decodeURI(location.pathname).replace(/\/$/, '').replace(/^\//, '');;
-        console.log('path:', path)
-        window.history.pushState({}, '', this.page)
+        // let path = decodeURI(location.pathname).replace(/\/$/, '').replace(/^\//, '');;
+        // console.log('path:', path)
+        //window.history.pushState({}, '', this.page)
+        
+        
     }
 
     adoptedCallback() {
