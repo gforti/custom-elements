@@ -7,14 +7,12 @@
     </head>
     <body>
         <div>TODO write content</div>
+                
+    <route-link data-page="test">testing</route-link>
+    <route-link data-page="test/1/cool">testing1</route-link>
+    <route-link data-page="test/s2">testing2</route-link>
         
-        <a href="africa">Africa</a>
-        <a href="asia">Asia</a>
-        <a href="europe">Europe</a>
-        <a href="north-america">North America</a>
-        <a href="oceania">Oceania</a>
-        <a href="south-america">South America</a>
-        
+        <script src="route-link.element.js">
         <script>
             // https://zinoui.com/blog/single-page-apps-html5-pushstate
             // https://medium.com/@george.norberg/history-api-getting-started-36bfc82ddefc
@@ -96,11 +94,11 @@
 		console.log('Router in action!');
 	})
         
-        document.querySelector('[href="africa"]').addEventListener('click', function(e){
+        document.querySelectorAll('[href]').forEach( link => link.addEventListener('click', function(e){
             console.log('clicked link', this.href)
             e.preventDefault();
             window.history.pushState({}, '', this.href);
-        })
+        }))
         
         console.log(document.querySelector('[href="africa"]'))
         
