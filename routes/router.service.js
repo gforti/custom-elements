@@ -35,6 +35,7 @@ class RouterService extends HttpFetch {
                 file = 'test1.html'
             break;
         }
+        let testing = 'cool'
         let data = await this.customFetch(`${folder}${file}`, null, 'GET').then(response => response.text())
         console.log(data)
         return data

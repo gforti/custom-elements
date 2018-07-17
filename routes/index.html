@@ -126,7 +126,9 @@
                 routerService.goto(e.detail)
                 let data = await routerService.load(e.detail)
                 
-                document.querySelector('div').innerHTML = data
+                let obj = {testing : 'cool', param1: true, param2: 10}     
+                console.log('eval', parseTpl(data, obj))                
+                document.querySelector('div').innerHTML = parseTpl(data, obj)
             }))
             
         })
@@ -135,6 +137,17 @@
        window.addEventListener('popstate', (e)=> {
            console.log(e)
        })
+       
+       function parseTpl(template, map, fallback) {
+        return template.replace(/\$\{.+?}/g, (match) => {
+          const path = match.substr(2, match.length - 3).trim();
+          return get(path, map, fallback);
+        })
+        
+        function get(path, obj, fb = `$\{${path}}`) {
+            return path.split('.').reduce((res, key) => res[key] || fb, obj);
+          }
+}
         
         </script>
     </body>
