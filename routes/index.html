@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>TODO write content</div>
+        <div></div>
         
         
                 
@@ -16,6 +16,8 @@
         
         
         <script src="route-link.element.js" defer></script>
+        <script src="todo-item.element.js" defer></script>
+        <script src="fetch.js"></script>
         <script src="router.service.js"></script>
         <script src="custom-elements.loaded.js"></script>
         
@@ -120,12 +122,19 @@
             
            const routerService = new RouterService()
                         
-           document.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', function(e){
+           document.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', async (e) => {
                 routerService.goto(e.detail)
+                let data = await routerService.load(e.detail)
+                
+                document.querySelector('div').innerHTML = data
             }))
             
         })
        
+       
+       window.addEventListener('popstate', (e)=> {
+           console.log(e)
+       })
         
         </script>
     </body>
