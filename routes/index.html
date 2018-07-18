@@ -126,9 +126,10 @@
                 routerService.goto(e.detail)
                 let data = await routerService.load(e.detail)
                 
-                let obj = {testing : 'cool', param1: true, param2: 10}     
-                console.log('eval', parseTpl(data, obj))                
-                document.querySelector('div').innerHTML = parseTpl(data, obj)
+                let obj = {testing : 'cool', param1: true, param2: 10, out : { in: 'in'} }     
+                console.log('eval', parseTemplate(data, obj))                
+                console.log('template', template`${data}`)                
+                document.querySelector('div').innerHTML = parseTemplate(data, obj)
             }))
             
         })
@@ -138,16 +139,35 @@
            console.log(e)
        })
        
-       function parseTpl(template, map, fallback) {
-        return template.replace(/\$\{.+?}/g, (match) => {
-          const path = match.substr(2, match.length - 3).trim();
-          return get(path, map, fallback);
-        })
+       function parseTemplate(template, map, fallback) {
+            return template.replace(/\$\{[^}]+\}/g, (match) => {
+                let result = match
+                    .slice(2, -1)
+                    .trim()
+                    .split(".")
+                    .reduce(
+                        (searchObject, key) => searchObject[key] || fallback || match,
+                        map
+                    )
+                    console.log(match
+                    .slice(2, -1)
+                    .trim().split("."))
+                    return result}
+            )
+            
+        }
         
-        function get(path, obj, fb = `$\{${path}}`) {
-            return path.split('.').reduce((res, key) => res[key] || fb, obj);
+        
+        function template(strings, ...interpolatedValues) {
+            return strings.reduce((total, current, index) => {
+              total += current;
+              if (interpolatedValues.hasOwnProperty(index)) {
+                total += String(interpolatedValues[index]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+              }
+              return total;
+            }, '');
           }
-}
+
         
         </script>
     </body>

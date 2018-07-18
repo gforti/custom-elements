@@ -20,5 +20,10 @@
         <script src="custom-elements.loaded.js"></script>
         <script src="todo.controller.js"></script>
                 
+        <script>
+            window.addEventListener('customElementsDefined', async ()=> {
+                await new TodoController().init()
+            })
+            </script>
     </body>
 </html>
