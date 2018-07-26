@@ -18,7 +18,18 @@
     <body>
         <div>TODO write content</div>
         
-        <template-class class="cool"></template-class>
-        <script src="template-class.element.js" defer></script>
+        
+    <custom-message>
+        <span slot="header">header text</span>
+        <span slot="message">body text stuff</span>
+    </custom-message>
+        <script src="custom-message.element.js"></script>
+        
+        <script>
+            
+            document.querySelector('custom-message').addEventListener('delete-clicked', ()=>{
+                console.log('delete clicked')
+            })
+        </script>
     </body>
 </html>

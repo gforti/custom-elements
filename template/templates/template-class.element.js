@@ -1,5 +1,8 @@
 (async () => {
-
+    /*
+     * <script src="{{name}}.element.js" defer></script>
+     * <{{name}}></{{name}}>
+     */
     function generateTemplate() {
 
         const template = document.createElement('template');
@@ -14,6 +17,7 @@
             </style>
             <article>
                 <h1>{{title}}</h1>
+                <slot></slot>
             </article>
         `;
         return template;

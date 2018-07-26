@@ -8,7 +8,7 @@ var fs = require('fs');
 
 program
   .usage('[options] <file>')
-  .option('-b, --base', 'Base Template Class')
+  .option('-e, --element', 'Base Custom Element Template class')
   .parse(process.argv)
 
 var templateName = program.args.shift() || null
@@ -47,7 +47,7 @@ function finalize() {
             console.log(files)
             
                         
-            fs.rename(files[0], `${destinationPath}/${templateName}.element.js`, function(err) {
+            fs.rename(`${destinationPath}/${files[0]}`, `${destinationPath}/${templateName}.element.js`, function(err) {
                 if ( err ) console.log('ERROR: ' + err);
             });
             
