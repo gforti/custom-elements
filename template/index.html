@@ -8,6 +8,13 @@
         <style>
             :root {
                 --primary: blue;
+                --accent: red;
+                --on-primary: white;
+                --on-accent: black;
+                --background: white;
+                --on-background: #777;
+                --surface: #aaa;
+                --on-surface: $999
                 
                 /*
                 $lime: #b0eb00;
@@ -40,6 +47,7 @@
                     $palette-paragraph: #1a1a1a;
                 
                 https://material-ui.com/customization/themes/
+                https://material.io/design/material-theming/implementing-your-theme.html#color
                 */
                 
             }
@@ -48,6 +56,13 @@
                 display: block;
                 background-color: gold;
             }
+            
+            #test {
+                --primary: red;
+                --on-primary: black;                
+                --surface: #eee;
+                --on-surface: $999
+            }
         </style>
     </head>
     <body>
@@ -55,6 +70,12 @@
         
         
     <custom-message>
+        <span slot="header">header text</span>
+        <span slot="message">body text stuff</span>
+    </custom-message>
+    
+    
+    <custom-message id="test">
         <span slot="header">header text</span>
         <span slot="message">body text stuff</span>
     </custom-message>

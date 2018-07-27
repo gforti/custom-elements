@@ -5,15 +5,16 @@ function generateTemplate() {
     template.innerHTML = `
         <style>
             :host .message {
-                background-color: var(--primary, #f5f5f5);
+                background-color: var(--surface, #f5f5f5);
+                color: var(--on-surface, #f5f5f5);
                 border-radius: 4px;
                 font-size: 1rem;
             }
             :host .message-header {
                 align-items: center;
-                background-color: #4a4a4a;
+                background-color: var(--primary, #f5f5f5);
+                color: var(--on-primary, #fff);
                 border-radius: 4px 4px 0 0;
-                color: #fff;
                 display: flex;
                 font-weight: 700;
                 justify-content: space-between;
