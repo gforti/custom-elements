@@ -1,12 +1,47 @@
 <!DOCTYPE html>
 <html>
     <head>
+        
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             :root {
-                --TemplateClass-color: blue;
+                --primary: blue;
+                
+                /*
+                $lime: #b0eb00;
+                $bright-red: #b30015;
+                $dark-blue: #2a00b3;
+
+                $brand-primary: $lime;
+                $brand-secondary: $bright-red;
+                $brand-tertiary: $dark-blue;
+                
+                $brand
+                $brand_tint (or $brand_light)
+                $brand_shade (or $brand_dark)
+                $accent
+                
+                Better
+                    $primary-color: #e03c31;
+                    $secondary-color: #7fff00;
+                    $text-color: #1a1a1a;
+                
+                Even Better
+                    // Internal variables
+                    $x-palette-red: #e03c31;
+                    $x-palette-green: #7fff00;
+
+                    // Global variables
+                    $palette-primary: $x-color-red;
+                    $palette-secondary: $x-color-green;
+
+                    $palette-paragraph: #1a1a1a;
+                
+                https://material-ui.com/customization/themes/
+                */
+                
             }
             
             .cool {
@@ -23,13 +58,9 @@
         <span slot="header">header text</span>
         <span slot="message">body text stuff</span>
     </custom-message>
-        <script src="custom-message.element.js"></script>
-        
-        <script>
-            
-            document.querySelector('custom-message').addEventListener('delete-clicked', ()=>{
-                console.log('delete clicked')
-            })
-        </script>
+    
+     <script type="module" src="main.js"></script>
+     
+    
     </body>
 </html>

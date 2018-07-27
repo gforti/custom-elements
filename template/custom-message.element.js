@@ -1,96 +1,94 @@
-(async () => {
+function generateTemplate() {
 
-    function generateTemplate() {
+    const template = document.createElement('template');
 
-        const template = document.createElement('template');
-
-        template.innerHTML = `
-            <style>
-                :host .message {
-                    background-color: #f5f5f5;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                }
-                :host .message-header {
-                    align-items: center;
-                    background-color: #4a4a4a;
-                    border-radius: 4px 4px 0 0;
-                    color: #fff;
-                    display: flex;
-                    font-weight: 700;
-                    justify-content: space-between;
-                    line-height: 1.25;
-                    padding: .75em 1em;
-                    position: relative;
-                }
-                :host .message-header+.message-body {
-                    border-width: 0;
-                    border-top-left-radius: 0;
-                    border-top-right-radius: 0;
-                }
-            :host .message-body {
-                border-color: #dbdbdb;
+    template.innerHTML = `
+        <style>
+            :host .message {
+                background-color: var(--primary, #f5f5f5);
                 border-radius: 4px;
-                border-style: solid;
-                border-width: 0 0 0 4px;
-                color: #4a4a4a;
-                padding: 1.25em 1.5em;
+                font-size: 1rem;
             }
-            :host .delete, .modal-close {
-                -moz-appearance: none;
-                -webkit-appearance: none;
-                background-color: rgba(10,10,10,.2);
-                border: none;
-                border-radius: 290486px;
-                cursor: pointer;
-                pointer-events: auto;
-                display: inline-block;
-                flex-grow: 0;
-                flex-shrink: 0;
-                height: 20px;
-                max-height: 20px;
-                max-width: 20px;
-                min-height: 20px;
-                min-width: 20px;
-                outline: 0;
-                position: relative;
-                vertical-align: top;
-                width: 20px;
-            }
-            :host .message-header .delete {
-                flex-grow: 0;
-                flex-shrink: 0;
-                margin-left: .75em;
-            }
-            :host .delete::before, .modal-close::before {
-                
-            }
-            :host .delete::after {
-            
-                width: 50%;
+            :host .message-header {
+                align-items: center;
+                background-color: #4a4a4a;
+                border-radius: 4px 4px 0 0;
                 color: #fff;
-                content: "X";
-                display: block;
-                font-weight: bold;
-                left: 50%;
-                top: 50%;
-               
+                display: flex;
+                font-weight: 700;
+                justify-content: space-between;
+                line-height: 1.25;
+                padding: .75em 1em;
+                position: relative;
             }
-            </style>
-            <article class="message">
-                <div class="message-header">
-                  <slot name="header"></slot>
-                  <button class="delete" aria-label="delete"></button>
-                </div>
-                <div class="message-body">
-                  <slot name="message"></slot>
-                </div>
-            </article>
-        `;
-        return template;
-    }
+            :host .message-header+.message-body {
+                border-width: 0;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+        :host .message-body {
+            border-color: #dbdbdb;
+            border-radius: 4px;
+            border-style: solid;
+            border-width: 0 0 0 4px;
+            color: #4a4a4a;
+            padding: 1.25em 1.5em;
+        }
+        :host .delete, .modal-close {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background-color: rgba(10,10,10,.2);
+            border: none;
+            border-radius: 290486px;
+            cursor: pointer;
+            pointer-events: auto;
+            display: inline-block;
+            flex-grow: 0;
+            flex-shrink: 0;
+            height: 20px;
+            max-height: 20px;
+            max-width: 20px;
+            min-height: 20px;
+            min-width: 20px;
+            outline: 0;
+            position: relative;
+            vertical-align: top;
+            width: 20px;
+        }
+        :host .message-header .delete {
+            flex-grow: 0;
+            flex-shrink: 0;
+            margin-left: .75em;
+        }
+        :host .delete::before, .modal-close::before {
 
-  class CustomMessage extends HTMLElement {
+        }
+        :host .delete::after {
+
+            width: 50%;
+            color: #fff;
+            content: "X";
+            display: block;
+            font-weight: bold;
+            left: 50%;
+            top: 50%;
+
+        }
+        </style>
+        <article class="message">
+            <div class="message-header">
+              <slot name="header"></slot>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              <slot name="message"></slot>
+            </div>
+        </article>
+    `;
+    return template;
+}
+
+class CustomMessage extends HTMLElement {
 
     constructor() {
       super();
@@ -128,13 +126,12 @@
 
     render() {
     }
-    
+
     btnClick() {
         this.dispatchEvent(new CustomEvent('delete-clicked'))
     }
 
 
-  }
+}
 
-  window.customElements.define('custom-message', CustomMessage);
-})();
+window.customElements.define('custom-message', CustomMessage);
