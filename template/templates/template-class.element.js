@@ -1,7 +1,7 @@
 (async () => {
     /*
-     * <script src="{{name}}.element.js" defer></script>
      * <{{name}}></{{name}}>
+     * <script src="{{name}}.element.js"></script>
      */
     function generateTemplate() {
 
@@ -11,7 +11,7 @@
             <style>
                 :host h1 {
                   font-size: 2.5rem;
-                  color: var(--{{title}}-color, red);
+                  color: var(--on-surface, red);
                 }
 
             </style>
@@ -35,6 +35,11 @@
         console.log('Custom element added to page.');
         this.render()
     }
+    
+    disconnectedCallback() {
+      // remove event listeners
+        console.log('Custom element removed from page.');
+    }
 
     adoptedCallback() {
         console.log('Custom element moved to new page.');
@@ -51,12 +56,7 @@
         console.log(`${attr} was changed from ${oldValue} to ${newValue}!`)
     }
 
-    disconnectedCallback() {
-      // remove event listeners
-        console.log('Custom element removed from page.');
-    }
-
-      render() {
+    render() {
     }
 
   }
