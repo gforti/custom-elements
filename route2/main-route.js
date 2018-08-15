@@ -3,7 +3,7 @@ import './todo-item.element.js';
 import routerService from './router.service.js';
 
 
-routerService.setPath('test/test', './test.js')
+routerService.setPath('test/test', './test.html.js')
 
 
 document.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', async (e) => {
