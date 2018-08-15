@@ -1,6 +1,6 @@
 /*
  * <script src="password-reveal.element.js" defer></script>
- * <password-reveal></password-reveal>
+ * <route-link data-page=""></route-link>
  */
 function generateTemplate() {
 
