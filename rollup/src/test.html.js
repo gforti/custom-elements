@@ -1,0 +1,1 @@
+export default '<todo-item></todo-item>'

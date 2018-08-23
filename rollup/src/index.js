@@ -3,11 +3,17 @@ import './todo-item.element.js';
 import routerService from './router.service.js';
 
 
-routerService.app = document.querySelector('div')
-routerService.setPath('test/test', './test.html.js', test1)
-routerService.setPath('test/s2', './test2.html.js', test2)
-routerService.setPath('?page=1', './page.html.js', test3)
 
+
+async function init() {
+    routerService.app = document.querySelector('div')
+    
+    routerService.setPath('test/test', 'test.html.js', test1)
+    routerService.setPath('test/s2', 'test2.html.js', test2)
+    routerService.setPath('?page=1', 'page.html.js', test3)
+}
+
+init()
 
 function test1() {
     routerService.app.querySelector('todo-item').innerHTML = 'cool'
@@ -22,5 +28,5 @@ function test3() {
 }
 
 document.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', async (e) => {
-    await routerService.goto(e.detail).load(e.detail)            
+    routerService.goto(e.detail).load(e.detail)            
 }))

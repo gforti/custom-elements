@@ -23,8 +23,9 @@ class RouterService {
         return this
     }  
     
-    setPath(path, file, callback) {
-        this.paths[path] = {file, callback}
+    async setPath(path, file, callback) {
+        let html = await import(/* webpackMode: "eager" */ `${file}`)
+        this.paths[path] = {html: file.default.toString(), callback}
         return this
     }
     
@@ -43,13 +44,11 @@ class RouterService {
         return this._app
     }
     
-    async load(path) {
+    load(path) {
         let pathInfo = this.getPath(path)
-        let data = await import(`${this.homePath}${pathInfo.file}`)
-        // console.log(data.default)
-        if (document.body.contains(this.app)) this.app.innerHTML = data.default.toString()
+        if (document.body.contains(this.app) && pathInfo.html ) this.app.innerHTML = pathInfo.html
         if ( typeof pathInfo.callback === 'function') pathInfo.callback(path)
-        return data 
+        return this 
     }
     
 }
