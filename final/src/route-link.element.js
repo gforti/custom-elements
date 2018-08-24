@@ -19,10 +19,11 @@ class RouteLink extends HTMLElement {
       const shadowRoot = this.attachShadow({ mode: 'open' })
       shadowRoot.appendChild(generateTemplate().content.cloneNode(true))
       this.link = this.shadowRoot.querySelector('a')
+      this.activateRouteBind = this.activateRoute.bind(this)
     }
 
     connectedCallback() {
-        this.link.addEventListener('click', this.activateRoute.bind(this))
+        this.link.addEventListener('click', this.activateRouteBind)
         this.render()
     }
     
@@ -32,7 +33,7 @@ class RouteLink extends HTMLElement {
     }
     
     disconnectedCallback() {
-        this.link.removeEventListener('click', this.activateRoute.bind(this))
+        this.link.removeEventListener('click', this.activateRouteBind)
     }
 
    static get observedAttributes() {
