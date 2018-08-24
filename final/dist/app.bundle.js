@@ -86,28 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src eager recursive ^.*$":
-/*!*****************************************!*\
-  !*** ./src eager ^.*$ namespace object ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-eval("var map = {\n\t\".\": \"./src/index.js\",\n\t\"./\": \"./src/index.js\",\n\t\"./index\": \"./src/index.js\",\n\t\"./index.html\": \"./src/index.html\",\n\t\"./index.js\": \"./src/index.js\",\n\t\"./page.html\": \"./src/page.html.js\",\n\t\"./page.html.js\": \"./src/page.html.js\",\n\t\"./route-link.element\": \"./src/route-link.element.js\",\n\t\"./route-link.element.js\": \"./src/route-link.element.js\",\n\t\"./router.service\": \"./src/router.service.js\",\n\t\"./router.service.js\": \"./src/router.service.js\",\n\t\"./test.html\": \"./src/test.html\",\n\t\"./test.html.js\": \"./src/test.html.js\",\n\t\"./test2.html\": \"./src/test2.html.js\",\n\t\"./test2.html.js\": \"./src/test2.html.js\",\n\t\"./todo-item.element\": \"./src/todo-item.element.js\",\n\t\"./todo-item.element.js\": \"./src/todo-item.element.js\"\n};\nvar fakeMap = {\n\t\"./src/index.js\": 9,\n\t\"./src/todo-item.element.js\": 7,\n\t\"./src/index.html\": 7,\n\t\"./src/page.html.js\": 9,\n\t\"./src/route-link.element.js\": 7,\n\t\"./src/router.service.js\": 9,\n\t\"./src/test.html\": 7,\n\t\"./src/test.html.js\": 9,\n\t\"./src/test2.html.js\": 9\n};\n\nfunction webpackAsyncContext(req) {\n\treturn webpackAsyncContextResolve(req).then(function(id) {\n\t\treturn __webpack_require__.t(id, fakeMap[id])\n\t});\n}\nfunction webpackAsyncContextResolve(req) {\n\t// Here Promise.resolve().then() is used instead of new Promise() to prevent\n\t// uncaught exception popping up in devtools\n\treturn Promise.resolve().then(function() {\n\t\tvar id = map[req];\n\t\tif(!(id + 1)) { // check for number or string\n\t\t\tvar e = new Error(\"Cannot find module '\" + req + \"'\");\n\t\t\te.code = 'MODULE_NOT_FOUND';\n\t\t\tthrow e;\n\t\t}\n\t\treturn id;\n\t});\n}\nwebpackAsyncContext.keys = function webpackAsyncContextKeys() {\n\treturn Object.keys(map);\n};\nwebpackAsyncContext.resolve = webpackAsyncContextResolve;\nwebpackAsyncContext.id = \"./src eager recursive ^.*$\";\nmodule.exports = webpackAsyncContext;\n\n//# sourceURL=webpack:///./src_eager_^.*$_namespace_object?");
-
-/***/ }),
-
-/***/ "./src/index.html":
-/*!************************!*\
-  !*** ./src/index.html ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("throw new Error(\"Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type.\\n> <!DOCTYPE html>\\n| <html>\\n|     <head>\");\n\n//# sourceURL=webpack:///./src/index.html?");
-
-/***/ }),
-
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -116,19 +94,7 @@ eval("throw new Error(\"Module parse failed: Unexpected token (1:0)\\nYou may ne
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _route_link_element_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./route-link.element.js */ \"./src/route-link.element.js\");\n/* harmony import */ var _route_link_element_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_route_link_element_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _todo_item_element_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./todo-item.element.js */ \"./src/todo-item.element.js\");\n/* harmony import */ var _todo_item_element_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_todo_item_element_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _router_service_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router.service.js */ \"./src/router.service.js\");\n\n\n\n\n\n\n\nasync function init() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app = document.querySelector('div')\n    \n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].setPath('test/test', 'test.html.js', test1)\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].setPath('test/s2', 'test2.html.js', test2)\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].setPath('?page=1', 'page.html.js', test3)\n}\n\ninit()\n\nfunction test1() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app.querySelector('todo-item').innerHTML = 'cool'\n}\n\nfunction test2() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app.querySelector('todo-item').innerHTML = 'two'\n}\n\nfunction test3() {\n    console.log('test 3')\n}\n\ndocument.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', async (e) => {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].goto(e.detail).load(e.detail)            \n}))\n\n//# sourceURL=webpack:///./src/index.js?");
-
-/***/ }),
-
-/***/ "./src/page.html.js":
-/*!**************************!*\
-  !*** ./src/page.html.js ***!
-  \**************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ('<div>Page 1</div>');\n\n//# sourceURL=webpack:///./src/page.html.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _route_link_element_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./route-link.element.js */ \"./src/route-link.element.js\");\n/* harmony import */ var _route_link_element_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_route_link_element_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _todo_item_element_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./todo-item.element.js */ \"./src/todo-item.element.js\");\n/* harmony import */ var _todo_item_element_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_todo_item_element_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _router_service_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router.service.js */ \"./src/router.service.js\");\n\n\n\n\n\n\n\nasync function init() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app = document.querySelector('div')\n    \n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].setPath('test/test', 'test.template.html', test1)\n    .setPath('test/s2', 'test2.template.html', test2)\n    .setPath('?page=1', 'page.template.html', test3)\n}\n\ninit()\n\nfunction test1() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app.querySelector('todo-item').innerHTML = 'cool'\n}\n\nfunction test2() {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].app.querySelector('todo-item').innerHTML = 'two'\n}\n\nfunction test3() {\n    console.log('test 3')\n}\n\ndocument.querySelectorAll('route-link').forEach( link => link.addEventListener('route-clicked', async (e) => {\n    _router_service_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"].goto(e.detail).load(e.detail)            \n}))\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -151,42 +117,7 @@ eval("/*\n * <script src=\"password-reveal.element.js\" defer></script>\n * <rou
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass RouterService {\n    \n    constructor() { \n        \n        if(this.instance){\n            return this.instance\n        }\n        this.instance = this\n        this.paths = {}\n        this._homePath = window.location.pathname.indexOf('.') > -1 ?\n                         window.decodeURI(window.location.pathname).split('/').slice(0, -1).join('/') :\n                         window.decodeURI(window.location.pathname)\n        this._homePath = this._homePath.endsWith('/') ? this._homePath : this._homePath + '/'\n              \n    }\n\n    get homePath() {\n        return this._homePath // `${window.location.origin}/`\n    }\n\n    goto(path) {\n        window.history.pushState(null, null, `${this.homePath}${path}`)\n        return this\n    }  \n    \n    async setPath(path, file, callback) {\n        let html = await __webpack_require__(\"./src eager recursive ^.*$\")(`${file}`)\n        this.paths[path] = {html: file.default.toString(), callback}\n        return this\n    }\n    \n    getPath(path) {\n        return this.paths[path]\n    }\n    \n    set app(elem) {\n        if (document.body.contains(elem))\n            this._app = elem\n        else\n            throw new Error('elem does not exist')\n    }\n    \n    get app(){\n        return this._app\n    }\n    \n    load(path) {\n        let pathInfo = this.getPath(path)\n        if (document.body.contains(this.app) && pathInfo.html ) this.app.innerHTML = pathInfo.html\n        if ( typeof pathInfo.callback === 'function') pathInfo.callback(path)\n        return this \n    }\n    \n}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new RouterService());\n\n\n//# sourceURL=webpack:///./src/router.service.js?");
-
-/***/ }),
-
-/***/ "./src/test.html":
-/*!***********************!*\
-  !*** ./src/test.html ***!
-  \***********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("throw new Error(\"Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type.\\n> <todo-item>Testing test</todo-item>\");\n\n//# sourceURL=webpack:///./src/test.html?");
-
-/***/ }),
-
-/***/ "./src/test.html.js":
-/*!**************************!*\
-  !*** ./src/test.html.js ***!
-  \**************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ('<todo-item></todo-item>');\n\n//# sourceURL=webpack:///./src/test.html.js?");
-
-/***/ }),
-
-/***/ "./src/test2.html.js":
-/*!***************************!*\
-  !*** ./src/test2.html.js ***!
-  \***************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ('<todo-item>Testing 2</todo-item>');\n\n//# sourceURL=webpack:///./src/test2.html.js?");
+eval("__webpack_require__.r(__webpack_exports__);\nclass RouterService {\n    \n    constructor() { \n        \n        if(this.instance){\n            return this.instance\n        }\n        this.instance = this\n        this.paths = {}\n        this._homePath = window.location.pathname.indexOf('.') > -1 ?\n                         window.decodeURI(window.location.pathname).split('/').slice(0, -1).join('/') :\n                         window.decodeURI(window.location.pathname)\n        this._homePath = this._homePath.endsWith('/') ? this._homePath : this._homePath + '/'\n              \n    }\n\n    get homePath() {\n        return this._homePath // `${window.location.origin}/`\n    }\n\n    goto(path) {\n        window.history.pushState(null, null, `${this.homePath}${path}`)\n        return this\n    }  \n    \n    setPath(path, file, callback) {\n        this.customFetch( `${file}`).then( (html) => {\n            this.paths[path] = {html, callback}\n        })        \n        return this\n    }\n    \n    getPath(path) {\n        return this.paths[path]\n    }\n    \n    set app(elem) {\n        if (document.body.contains(elem))\n            this._app = elem\n        else\n            throw new Error('elem does not exist')\n    }\n    \n    get app(){\n        return this._app\n    }\n    \n    load(path) {\n        let pathInfo = this.getPath(path)\n        if (document.body.contains(this.app) && pathInfo.html ) {\n            let newApp = this.app.cloneNode(false)\n            newApp.innerHTML = pathInfo.html\n            this.app.parentNode.replaceChild(newApp, this.app)\n            this.app = newApp\n        }\n        if ( typeof pathInfo.callback === 'function') pathInfo.callback(path)\n        return this \n    }\n    \n    customFetch(url) {\n        let myInit = {method: 'GET', mode: 'cors', cache: 'default'}        \n        const myRequest = new Request(url, myInit)\n        return fetch(myRequest)\n                .then(response => {\n                    if (!response.ok)\n                        throw Error(response.statusText)\n                    return response.text()\n                })\n    }\n    \n}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new RouterService());\n\n\n//# sourceURL=webpack:///./src/router.service.js?");
 
 /***/ }),
 
@@ -202,13 +133,13 @@ eval("\n\n    function generateTemplate() {\n\n        const template = document
 /***/ }),
 
 /***/ 0:
-/*!*********************************************************************************************************************************************************************!*\
-  !*** multi ./src/index.js ./src/page.html.js ./src/route-link.element.js ./src/router.service.js ./src/test.html.js ./src/test2.html.js ./src/todo-item.element.js ***!
-  \*********************************************************************************************************************************************************************/
+/*!***********************************************************************************************************!*\
+  !*** multi ./src/index.js ./src/route-link.element.js ./src/router.service.js ./src/todo-item.element.js ***!
+  \***********************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("__webpack_require__(/*! ./src/index.js */\"./src/index.js\");\n__webpack_require__(/*! ./src/page.html.js */\"./src/page.html.js\");\n__webpack_require__(/*! ./src/route-link.element.js */\"./src/route-link.element.js\");\n__webpack_require__(/*! ./src/router.service.js */\"./src/router.service.js\");\n__webpack_require__(/*! ./src/test.html.js */\"./src/test.html.js\");\n__webpack_require__(/*! ./src/test2.html.js */\"./src/test2.html.js\");\nmodule.exports = __webpack_require__(/*! ./src/todo-item.element.js */\"./src/todo-item.element.js\");\n\n\n//# sourceURL=webpack:///multi_./src/index.js_./src/page.html.js_./src/route-link.element.js_./src/router.service.js_./src/test.html.js_./src/test2.html.js_./src/todo-item.element.js?");
+eval("__webpack_require__(/*! ./src/index.js */\"./src/index.js\");\n__webpack_require__(/*! ./src/route-link.element.js */\"./src/route-link.element.js\");\n__webpack_require__(/*! ./src/router.service.js */\"./src/router.service.js\");\nmodule.exports = __webpack_require__(/*! ./src/todo-item.element.js */\"./src/todo-item.element.js\");\n\n\n//# sourceURL=webpack:///multi_./src/index.js_./src/route-link.element.js_./src/router.service.js_./src/todo-item.element.js?");
 
 /***/ })
 

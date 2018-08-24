@@ -23,9 +23,10 @@ class RouterService {
         return this
     }  
     
-    async setPath(path, file, callback) {
-        let html = await import(/* webpackMode: "eager" */ `${file}`)
-        this.paths[path] = {html: file.default.toString(), callback}
+    setPath(path, file, callback) {
+        this.customFetch( `${file}`).then( (html) => {
+            this.paths[path] = {html, callback}
+        })        
         return this
     }
     
@@ -46,9 +47,25 @@ class RouterService {
     
     load(path) {
         let pathInfo = this.getPath(path)
-        if (document.body.contains(this.app) && pathInfo.html ) this.app.innerHTML = pathInfo.html
+        if (document.body.contains(this.app) && pathInfo.html ) {
+            let newApp = this.app.cloneNode(false)
+            newApp.innerHTML = pathInfo.html
+            this.app.parentNode.replaceChild(newApp, this.app)
+            this.app = newApp
+        }
         if ( typeof pathInfo.callback === 'function') pathInfo.callback(path)
         return this 
+    }
+    
+    customFetch(url) {
+        let myInit = {method: 'GET', mode: 'cors', cache: 'default'}        
+        const myRequest = new Request(url, myInit)
+        return fetch(myRequest)
+                .then(response => {
+                    if (!response.ok)
+                        throw Error(response.statusText)
+                    return response.text()
+                })
     }
     
 }

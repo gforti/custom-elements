@@ -16,7 +16,9 @@
           template: './src/index.html',
           filename: './index.html'
         }),
-       
+       new CopyWebpackPlugin([
+            {from: './src/*.template.html', to: '[name].[ext]'}
+        ])
         
     ],
     output: {
