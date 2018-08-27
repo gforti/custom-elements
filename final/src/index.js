@@ -6,7 +6,7 @@ import routerService from './router.service.js';
 
 
 async function init() {
-    routerService.app = document.querySelector('div')
+    routerService.app = document.querySelector('div#main')
     
     routerService.setPath('test/test', 'test.template.html', test1)
     .setPath('test/s2', 'test2.template.html', test2)
