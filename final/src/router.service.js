@@ -23,10 +23,11 @@ class RouterService {
         return this
     }  
     
-    setPath(path, file, callback) {
-        this.customFetch( `${file}`).then( (html) => {
+    async setPath(controller) {
+        let {path, template, callback} = await import(controller)       
+        this.customFetch( `${template}`).then( (html) => {
             this.paths[path] = {html, callback}
-        })        
+        })           
         return this
     }
     

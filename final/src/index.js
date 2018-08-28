@@ -8,9 +8,9 @@ import routerService from './router.service.js';
 async function init() {
     routerService.app = document.querySelector('div#main')
     
-    routerService.setPath('test/test', 'test.template.html', test1)
-    .setPath('test/s2', 'test2.template.html', test2)
-    .setPath('?page=1', 'page.template.html', test3)
+    routerService.setPath('./test.controller.js')
+    //.setPath('test/s2', 'test2.template.html', test2)
+    //.setPath('?page=1', 'page.template.html', test3)
 }
 
 init()
