@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <auto-sort>
+        </auto-sort>
+        
+        <script type="module" src="index.js"></script>
+        
+        <script>
+            const taskData = [
+                {
+                  name: 'London',
+                  position: 0,
+                  required_position: 2
+                },
+                {
+                  name: 'Moscow',
+                  position: 1,
+                  required_position: 0
+                },
+                {
+                  name: 'Madrid',
+                  position: 2,
+                  required_position: 1
+                },
+                {
+                  name: 'Canberra',
+                  position: 3,
+                  required_position: 3
+                }
+              ];
+              
+           
+            document.querySelector('auto-sort').dataset.wow = JSON.stringify(taskData)
+            </script>
+        
+    </body>
+</html>
