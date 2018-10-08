@@ -1,11 +1,8 @@
-(async () => {
-    /*
-     * <{{name}}></{{name}}>
-     * <script src="{{name}}.element.js"></script>
-     */
-    function generateTemplate() {
+window.customElements.define('{{name}}', class extends HTMLElement {
 
-        const template = document.createElement('template');
+    generateTemplate() {
+
+        const template = document.createElement('template')
 
         template.innerHTML = `
             <style>
@@ -19,30 +16,32 @@
                 <h1>{{title}}</h1>
                 <slot></slot>
             </article>
-        `;
-        return template;
+        `
+        return template
     }
 
-  class {{title}} extends HTMLElement {
-
     constructor() {
-      super();
-      const shadowRoot = this.attachShadow({ mode: 'open' });
-      shadowRoot.appendChild(generateTemplate().content.cloneNode(true));
+        super()
+        this.attachShadow({ mode: 'open' })
+        this.shadowRoot.appendChild(this.generateTemplate().content.cloneNode(true))
+        // this.element = this.shadowRoot.querySelector('slot')
+        // this.functionBind = this.function.bind(this)
     }
 
     connectedCallback() {
-        console.log('Custom element added to page.');
+        console.log('Custom element added to page.')
+        // this.element.addEventListener('click', this.functionBind)
         this.render()
     }
     
     disconnectedCallback() {
-      // remove event listeners
-        console.log('Custom element removed from page.');
+        // remove event listeners
+        console.log('Custom element removed from page.')
+        // this.element.removeEventListener('click', this.functionBind)
     }
 
     adoptedCallback() {
-        console.log('Custom element moved to new page.');
+        console.log('Custom element moved to new page.')
     }
 
     static get observedAttributes() {
@@ -58,8 +57,11 @@
 
     render() {
     }
+    
+    /* function.bind() {
+            this.dispatchEvent(new CustomEvent('{{name}}-click', { detail: this.element.value }))
+        }
+     */
 
-  }
 
-  window.customElements.define('{{name}}', {{title}});
-})();
+});

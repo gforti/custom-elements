@@ -337,6 +337,7 @@
                       //taskElems[position].classList.remove('task_elem_animate');
                       taskElems[position-1].classList.remove('task_elem_animate');
                       console.log(position, 'done')
+                      tasks = [...document.querySelectorAll('.task_elem')]
                       resolve(true);
                     }, 1000);
                 });
@@ -344,24 +345,61 @@
               
               function moveTaskElem (position) {
                   return  new Promise((resolve, reject) => {
-                    let taskElems = document.querySelectorAll('.task_elem');
+                    let taskElems = [...document.querySelectorAll('.task_elem')];
                     let newPos = ~~taskElems[position].dataset.required_position
                     taskElems[position].dataset.position = newPos
-                    container.insertBefore(taskElems[position], taskElems[newPos]);
+                    
+                    console.log('position', position, 'newPos', newPos)
+                    
+                    const from = taskElems[position].getBoundingClientRect();
+                    const to = taskElems[newPos].getBoundingClientRect();
+                    console.log('from', from)
+                    console.log('to', to)
+                    
+                    
+                    const tweenAmount = 10;
+                    const animDelta = (to.top - from.top);
+                    
+                    let moves = new Array(tweenAmount).fill(0).map( (v, i) => animDelta*i/tweenAmount)
+                    
+                    console.log('moves', moves)
+                    
+                    function moveit(move, el, el2) {
+                        let by1 = move.shift()
+                        setTranslate( by1, el)
+                        setTranslate( -by1, el2)
+                        if (move.length) {
+                            setTimeout(moveit, 50, move, el, el2)
+                        } else {
+                            console.log('complete')
+                            container.insertBefore(el, el2);
+                            setTranslate( 0, el)
+                            setTranslate( 0, el2)
+                            resolve(newPos);
+                        }
+                    }
+                    moveit(moves, taskElems[position], taskElems[newPos])
+                    
                     //taskElems[position].classList.add('task_elem_animate');
                     
-                    taskElems[newPos].classList.add('task_elem_animate');
-                    taskElems[position].classList.add('task_elem_animate2');
-                    disableArrows();
-                    setTimeout(() => {
+                    //taskElems[newPos].classList.add('task_elem_animate');
+                    //taskElems[position].classList.add('task_elem_animate2');
+                    //disableArrows();
+                    
+                    /*setTimeout(() => {
                       //taskElems[position].classList.remove('task_elem_animate');
                       taskElems[newPos].classList.remove('task_elem_animate');
                       taskElems[position].classList.remove('task_elem_animate2');
                       console.log(position, newPos, 'done')
                       resolve(newPos);
-                    }, 1000);
+                    }, 1000);*/
+            
                 });
               }
+              
+            function setTranslate( yPos, el) {
+                el.style.transform = `translate(0px, ${yPos}px)`;
+            }
 
               function moveTaskElemDown (position) {
                 return  new Promise((resolve, reject) => {
@@ -376,6 +414,7 @@
                          // taskElems[position].classList.remove('task_elem_animate');
                           taskElems[+position+1].classList.remove('task_elem_animate');
                           console.log(position, 'done')
+                          tasks = [...document.querySelectorAll('.task_elem')]
                           resolve(true);
                         }, 1000);
                 });
@@ -436,13 +475,24 @@
                 return arrCopy;
               }
               
-              let tasks = container.querySelectorAll('.task_elem')
-               setTimeout( async function(){
-                   tasks.forEach(async (task, index) =>{
-                        if ( index !== ~~task.dataset.required_position) {
-                            await moveTaskElem(index)                           
-                        }
-                    })
+              let tasks = [...container.querySelectorAll('.task_elem')]
+             
+               setTimeout( async function waiter(){
+                   if( !tasks.length) {
+                       
+                       console.log('stop')
+                       return
+                   }
+                   let task = tasks.pop()
+                   let index = tasks.length
+                
+                    if ( index !== ~~task.dataset.required_position) {
+                        await moveTaskElem(index) 
+                        tasks = [...document.querySelectorAll('.task_elem')]
+                    }
+                     
+                    setTimeout(waiter, 100)
+                    
                 }, 1000);
               console.log(tasks)
         </script>
