@@ -4,12 +4,17 @@
         <title>Output Management</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            div#main {
+                transition: all 1s ease;
+            }
+        </style>
     </head>
     <body>
         <route-link data-page="test/test">testing</route-link>
         <route-link data-page="?page=1">testing1</route-link>
         <route-link data-page="test/s2">testing2</route-link>
-        <div></div>        
+        <div id="main"></div>        
         
         <script type="module" src="index.js"></script>
     <script type="text/javascript" src="app.bundle.js"></script></body>

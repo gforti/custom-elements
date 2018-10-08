@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font: 16px Arial, Helvetica, sans-serif; 
+              }
+
+              li {
+                cursor: pointer;
+                user-select: none;
+              }
+
+              .more {
+                border-top: 1px dotted rgb(196, 196, 196);
+                font-size: 12px;
+                padding-top: 10px;
+              }
+
+              .more,
+              .more a {
+                color: rgb(96, 96, 96);
+              }
+        </style>
+    </head>
+    <body>
+        <ul>
+            <li data-id="2" draggable="true" ondragend="dragEnd()" ondragover="dragOver(event)" ondragstart="dragStart(event)">Apples</li>
+            <li data-id="1" draggable="true" ondragend="dragEnd()" ondragover="dragOver(event)" ondragstart="dragStart(event)">Oranges</li>
+            <li data-id="3" draggable="true" ondragend="dragEnd()" ondragover="dragOver(event)" ondragstart="dragStart(event)">Bananas</li>
+            <li data-id="4" draggable="true" ondragend="dragEnd()" ondragover="dragOver(event)" ondragstart="dragStart(event)">Strawberries</li>
+        </ul>
+
+        <script>
+            
+            var _el;
+
+            function dragOver(e) {
+              if (isBefore(_el, e.target))
+                e.target.parentNode.insertBefore(_el, e.target);
+              else
+                e.target.parentNode.insertBefore(_el, e.target.nextSibling);
+            }
+
+            function dragEnd() {
+              _el = null;
+            }
+
+            function dragStart(e) {
+              e.dataTransfer.effectAllowed = "move";
+              e.dataTransfer.setData("text/plain", null);
+              _el = e.target;
+            }
+
+            function isBefore(el1, el2) {
+                if (el2.parentNode === el1.parentNode)
+                    for (var cur = el1.previousSibling; cur; cur = cur.previousSibling)
+                        if (cur === el2)
+                            return true;
+                return false;
+            }
+            
+        </script>
+        
+        
+    </body>
+</html>

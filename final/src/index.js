@@ -3,7 +3,7 @@ import './todo-item.element.js';
 import routerService from './router.service.js';
 
 
-
+document.addEventListener('DOMContentLoaded', init)
 
 async function init() {
     routerService.app = document.querySelector('div#main')
@@ -13,7 +13,6 @@ async function init() {
     //.setPath('?page=1', 'page.template.html', test3)
 }
 
-init()
 
 function test1() {
     routerService.app.querySelector('todo-item').innerHTML = 'cool'

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            html {
+                box-sizing: border-box;
+              }
+              * {
+                box-sizing: inherit;
+              }
+              body {
+                background-color: #272727;
+                margin: 0;  
+                padding: 0;
+                font-family: 'Montserrat', sans-serif;
+                overflow: hidden;
+                min-height: 100vh;
+                background-image: url('data:image/svg+xml,%3Csvg width="52" height="26" viewBox="0 0 52 26" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23474747" fill-opacity="0.4"%3E%3Cpath d="M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z" /%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+              }
+              .unselectable {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+              .task_container {
+                position: relative;
+                padding: 0 1em;
+                /*border: 1px solid red;*/
+              }
+              .task_elem{
+                min-height: 4em;
+                margin: 1em 0;
+                padding: 1em 7em 1em 1em;
+                display: flex;
+                position: relative;
+                align-items: center;
+                background-color: #ffc600;
+                box-shadow: 0 2px 3px rgba(0,0,0,0.7);
+                border-radius: 3px;
+                word-wrap: break-word;
+              }
+              .task_elem__arrow {
+                position: absolute;
+                top: 1em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                height: 2em;
+                width: 2em;
+                color: #272727;
+                border: 1px solid;
+                border-radius: 2px;
+                background-repeat: no-repeat;
+                background-position: center;
+              }
+              .task_elem__arrow:hover {
+                color: #ffffff;
+                box-shadow: 0 0 7px rgba(255,255,255,0.9);
+              }
+              .task_elem__arrow-up {
+                right: 4em;
+                background-image: url(https://svgshare.com/i/5yJ.svg);
+              }
+              .task_elem__arrow-up:hover {
+                background-image: url(https://svgshare.com/i/5w_.svg);
+              }
+              .task_elem__arrow-down {
+                right: 1em;
+                background-image: url(https://svgshare.com/i/5yT.svg);
+              }
+              .task_elem__arrow-down:hover {
+                background-image: url(https://svgshare.com/i/5wt.svg);
+              }
+              .task_elem__arrow_disabled {
+                pointer-events: none;
+                opacity: 0.3;
+              }
+              .task_elem_animate {
+                animation-duration: 1.1s;
+                animation-name: slide;
+              }
+              @keyframes slide {
+                from {
+                  opacity: 0.2;                  
+                  margin-left:-100vw;
+                  margin-right:100vw;
+                  
+                }
+                to {
+                  opacity: 1;
+                  margin-left: 0vw;
+                  margin-right: 0vw;
+                  
+                }
+              }
+              
+              .task_elem_animate2 {
+                animation-duration: 1.1s;
+                animation-name: slide2;
+              }
+              @keyframes slide2 {
+                from {
+                  opacity: 0.2;                  
+                  margin-left:-100vw;
+                  margin-right:100vw;
+                  
+                }
+                to {
+                  opacity: 1;
+                  margin-left: 0vw;
+                  margin-right: 0vw;
+                  
+                }
+              }
+              .btn {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 2.5em;  
+                background-color: #ffc600;
+                cursor: pointer;
+                box-shadow: 0 2px 3px rgba(0,0,0,0.7);
+                border-radius: 2px;
+              }
+              .btn:hover {
+                box-shadow: 0 0 4px rgba(255,255,255,0.8);
+              }
+              .btn_check {
+                right: 1em;
+                width: 7em;
+              }
+              .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background-color: rgba(0,0,0,0.6);
+              }
+              .modal_content {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f0f0f0;
+                margin: 15% auto;
+                padding: 3em;
+                width: 80%;
+                max-width: 400px;
+                min-height: 30%;
+                box-shadow: 0 2px 3px rgba(0,0,0,0.7);
+                border-radius: 3px;
+              }
+              .modal_content__good:before,
+              .modal_content__bad:before{
+                content: '.';
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 15px;
+                min-height: 15px;
+                max-height: 15px;
+                font-size: 0;
+                width: 100%;
+              }
+              .modal_content__good:before {
+                background-color: rgb(110,219,37);
+                box-shadow: 0 2px 1px rgba(110,219,37,0.5);
+              }
+              .modal_content__bad:before {
+                background-color: rgb(255,0,0);
+                box-shadow: 0 2px 1px rgba(255,0,0,0.5);
+              }
+
+              .wrapper {
+                min-width: 100vw;
+                display: flex;
+                padding: 1em 3em;
+              }
+
+              .static_data_container {
+                min-height: 50vh;
+                padding: 0 1em;
+                flex: 1;
+              }
+
+              .task_container {
+                flex: 3;
+              }
+
+              h2,
+              p {
+                padding: 0 65px;
+                margin: 0;
+              }
+
+              h2 {
+                color: #ffffff;
+                margin: 20px 0 10px 0;
+                text-decoration: underline;
+              }
+              p {
+                color: #ffc600;
+              }
+        </style>
+    </head>
+    <body>
+        <h2>Help little capitals find their countries!</h2>
+        <p>* just press the arrows to put the capitals' cards in the right order. click "check" when you think it's done.</p>
+        <div class="wrapper">  
+          
+          <div id="rangingTaskContainer" class="unselectable task_container"></div>
+        </div> 
+        
+        <script>
+            const taskData = [
+                {
+                  name: 'London',
+                  position: 0,
+                  required_position: 2
+                },
+                {
+                  name: 'Moscow',
+                  position: 1,
+                  required_position: 0
+                },
+                {
+                  name: 'Madrid',
+                  position: 2,
+                  required_position: 1
+                },
+                {
+                  name: 'Canberra',
+                  position: 3,
+                  required_position: 3
+                }
+              ];
+              
+             
+
+              const imagesToPreload = [
+                {
+                  role: 'arrow_up_hover',
+                  url: 'https://svgshare.com/i/5w_.svg'
+                },
+                {
+                  role: 'arrow_down_hover',
+                  url: 'https://svgshare.com/i/5wt.svg'
+                }
+              ];
+
+              function preloadImage(imageUrl) {
+                let newImage = new Image();
+                newImage.src = '' + imageUrl;
+              }
+
+              imagesToPreload.forEach( (image) => {
+                preloadImage(image.url);
+              });
+
+              const body = document.querySelector('body');
+              const container = document.querySelector('#rangingTaskContainer');
+              
+
+
+              taskData.forEach( function(elem) {  
+                let newItem = document.createElement('div');
+
+                let taskArrowUp = document.createElement('div');
+                taskArrowUp.className = 'task_elem__arrow task_elem__arrow-up';
+
+                let taskArrowDown = document.createElement('div');
+                taskArrowDown.className = 'task_elem__arrow task_elem__arrow-down';
+
+                newItem.innerHTML = elem.name;
+                newItem.className = 'task_elem';
+                newItem.dataset.position = elem.position;
+                newItem.dataset.required_position = elem.required_position;
+                newItem.appendChild(taskArrowUp);
+                newItem.appendChild(taskArrowDown);
+
+                container.appendChild(newItem);
+              });
+
+              let checkBtnElem = document.createElement('div');
+              checkBtnElem.innerText = 'Check';
+              checkBtnElem.className = 'btn btn_check';
+              container.appendChild(checkBtnElem);
+
+              const checkBtn = container.querySelector('.btn_check');
+
+              let modalWindowElem = document.createElement('div');
+              modalWindowElem.className = 'modal';
+              body.appendChild(modalWindowElem);
+
+              const modalWindow = document.querySelector('.modal');
+
+              let modalWindowContentElem = document.createElement('div');
+              modalWindowContentElem.className = 'modal_content';
+              modalWindow.appendChild(modalWindowContentElem);
+
+              disableArrows();
+
+              let arrows = document.querySelectorAll('.task_elem__arrow');
+
+              arrows.forEach( function (arrow) {
+                arrow.addEventListener("click", function (e) {
+                  if (e.target.className.includes('up')) {
+                    moveTaskElemUp(e.target.parentNode.dataset.position);
+                  }
+                  if (e.target.className.includes('down')) {
+                    moveTaskElemDown(e.target.parentNode.dataset.position);
+                  }
+                });
+              });
+              
+              function moveTaskElemUp  (position) {
+                  return  new Promise((resolve, reject) => {
+                    let taskElems = document.querySelectorAll('.task_elem');
+                    taskElems[position].dataset.position = +position - 1;
+                    taskElems[position-1].dataset.position = position;
+                    container.insertBefore(taskElems[position], taskElems[position-1]);
+                    //taskElems[position].classList.add('task_elem_animate');
+                    taskElems[position-1].classList.add('task_elem_animate');
+                    disableArrows();
+                    setTimeout(() => {
+                      //taskElems[position].classList.remove('task_elem_animate');
+                      taskElems[position-1].classList.remove('task_elem_animate');
+                      console.log(position, 'done')
+                      resolve(true);
+                    }, 1000);
+                });
+              }
+              
+              function moveTaskElem (position) {
+                  return  new Promise((resolve, reject) => {
+                    let taskElems = document.querySelectorAll('.task_elem');
+                    let newPos = ~~taskElems[position].dataset.required_position
+                    taskElems[position].dataset.position = newPos
+                    container.insertBefore(taskElems[position], taskElems[newPos]);
+                    //taskElems[position].classList.add('task_elem_animate');
+                    
+                    taskElems[newPos].classList.add('task_elem_animate');
+                    taskElems[position].classList.add('task_elem_animate2');
+                    disableArrows();
+                    setTimeout(() => {
+                      //taskElems[position].classList.remove('task_elem_animate');
+                      taskElems[newPos].classList.remove('task_elem_animate');
+                      taskElems[position].classList.remove('task_elem_animate2');
+                      console.log(position, newPos, 'done')
+                      resolve(newPos);
+                    }, 1000);
+                });
+              }
+
+              function moveTaskElemDown (position) {
+                return  new Promise((resolve, reject) => {
+                        let taskElems = document.querySelectorAll('.task_elem');
+                        taskElems[position].dataset.position = +position + 1;
+                        taskElems[+position+1].dataset.position = position;
+                        container.insertBefore(taskElems[+position+1], taskElems[position]);
+                        //taskElems[position].classList.add('task_elem_animate');
+                        taskElems[+position+1].classList.add('task_elem_animate');
+                        disableArrows();
+                        setTimeout(() => {
+                         // taskElems[position].classList.remove('task_elem_animate');
+                          taskElems[+position+1].classList.remove('task_elem_animate');
+                          console.log(position, 'done')
+                          resolve(true);
+                        }, 1000);
+                });
+              }
+
+              function disableArrows () {
+                let arrows = document.querySelectorAll('.task_elem__arrow');
+                arrows.forEach( function (arrow) {
+                  arrow.classList.remove('task_elem__arrow_disabled');
+                });
+                arrows[0].classList.add('task_elem__arrow_disabled');
+                arrows[arrows.length-1].classList.add('task_elem__arrow_disabled');
+              }
+
+              checkBtn.addEventListener('click', checkTask);
+
+              function checkTask() {
+                let taskElems = document.querySelectorAll('.task_elem');
+                let resultsArr = [];
+                let answersArr = [];
+                taskElems.forEach(function(taskElem) {
+                  resultsArr.push(taskElem.dataset.position);
+                  answersArr.push(taskElem.dataset.required_position);
+                });
+                let result = compareSimpleArrays(resultsArr, answersArr);
+                if (result) {
+                  let modalContent = modalWindow.querySelector('.modal_content');
+                  modalContent.className = 'modal_content';
+                  modalContent.classList.add('modal_content__good');
+                  modalContent.innerText = 'Great! You are totally right!';
+                } else {
+                  let modalContent = modalWindow.querySelector('.modal_content');
+                  modalContent.className = 'modal_content';
+                  modalContent.classList.add('modal_content__bad');
+                  modalContent.innerText = 'Whoops... Your answer is wrong.\r\n Try again, please.';
+                }
+                modalWindow.style.display = 'block';
+                setTimeout(function(){
+                  modalWindow.style.display = 'none';
+                }, 4000);
+              }
+
+              function compareSimpleArrays (arr1, arr2) {
+                return JSON.stringify(arr1) === JSON.stringify(arr2);
+              }
+
+              function shuffleArray(arr) {
+                let arrCopy = [...arr];
+                let counter = arrCopy.length;    
+                while (counter > 0) {
+                  let index = Math.floor(Math.random() * counter);
+                  counter--;
+
+                  let temp = arrCopy[counter];
+                  arrCopy[counter] = arrCopy[index];
+                  arrCopy[index] = temp;
+                }
+                return arrCopy;
+              }
+              
+              let tasks = container.querySelectorAll('.task_elem')
+               setTimeout( async function(){
+                   tasks.forEach(async (task, index) =>{
+                        if ( index !== ~~task.dataset.required_position) {
+                            await moveTaskElem(index)                           
+                        }
+                    })
+                }, 1000);
+              console.log(tasks)
+        </script>
+    </body>
+</html>
