@@ -14,29 +14,124 @@
         <script>
             const taskData = [
                 {
+                  id: 1,
                   name: 'London',
-                  position: 0,
                   required_position: 2
                 },
                 {
+                  id: 2,
                   name: 'Moscow',
-                  position: 1,
                   required_position: 0
                 },
                 {
+                  id: 3,
                   name: 'Madrid',
-                  position: 2,
                   required_position: 1
                 },
                 {
+                  id: 4,
                   name: 'Canberra',
-                  position: 3,
                   required_position: 3
                 }
               ];
               
+              
+              
+              const taskData2 = [                
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 5
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 4
+                },
+                 {
+                  id: 1,
+                  name: 'London',
+                  required_position: 0
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 2
+                },
+              ];
+              
+              
+              const taskData3 = [                
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 2
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 1
+                },
+                 {
+                  id: 1,
+                  name: 'London',
+                  required_position: 5
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 4
+                },
+              ];
+              
+              
+              const taskData4 = [                
+                {
+                  id: 1,
+                  name: 'London',
+                  required_position: 5
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 4
+                },
+                {
+                  id: 3,
+                  name: 'Madrid',
+                  required_position: 3
+                },
+                {
+                  id: 4,
+                  name: 'Canberra',
+                  required_position: 2
+                },
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 1
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 0
+                },
+                
+              ];
            
             document.querySelector('auto-sort').dataset.wow = JSON.stringify(taskData)
+            
+            setTimeout(() => {
+                document.querySelector('auto-sort').dataset.wow = JSON.stringify(taskData2)
+            },1000)
+            
+            setTimeout(() => {
+                document.querySelector('auto-sort').dataset.wow = JSON.stringify(taskData3)
+            },4000)
+            
+            setTimeout(() => {
+                document.querySelector('auto-sort').dataset.wow = JSON.stringify(taskData4)
+            },5000)
             </script>
         
     </body>
