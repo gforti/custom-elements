@@ -5,12 +5,6 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         const template = document.createElement('template')
 
         template.innerHTML = `
-            <style>
-                article {
-                               
-              }
-        
-            </style>
             <article>
             </article>
         `
@@ -26,20 +20,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.timer = null      
         this.renderBind = this.render.bind(this)        
         this.taskData = new Map();
-        // this.functionBind = this.function.bind(this)
-    }
-
-    connectedCallback() {        
-    }
-    
-    disconnectedCallback() {       
-    }
-
-    adoptedCallback() {
     }
 
     static get observedAttributes() {
-      return ['data-wow'];
+      return ['data-items']
     }
 
     attributeChangedCallback(attr, oldValue, newValue) {
@@ -58,13 +42,13 @@ window.customElements.define('auto-sort', class extends HTMLElement {
          })
          
          let newPositions = [...tempMap.values()].reduce((accumulator, currentValue) => accumulator.concat(currentValue.required_position),[])
-         
-         if (new Set(newPositions).size !== newPositions.length) {
+         let setPos = new Set(newPositions)
+         const allPositionsExist = newPositions.every((v) => v < newPositions.length)
+         if (!allPositionsExist || setPos.size !== newPositions.length) {
             throw new Error(`Position  conflict with new data`)
-            console.log('-------POSITION CONFLICT---------')
             return false
          }
-        
+         
         newData.forEach( (elem) => { 
             this.taskData.set(elem.id, elem)
         })
@@ -72,8 +56,11 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
     
     setdata(val) {
-        
-        if ( !this.isPositionsUnique(val) ) return
+        try {
+            this.isPositionsUnique(val)
+        } catch(e) {
+            return
+        }
         
         let frag = document.createDocumentFragment()
         JSON.parse(val).forEach( (elem) => {  
@@ -83,7 +70,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 newItem.innerHTML = elem.name
                 newItem.setAttribute('id', `task-${elem.id}`)
                 newItem.dataset.required_position = elem.required_position
-                frag.appendChild(newItem);
+                frag.appendChild(newItem)
             } else {                
                 item.dataset.required_position = elem.required_position  
             }
@@ -92,7 +79,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
           this.element.appendChild(frag)          
         
           if (null === this.timer){
-            this.timer = requestAnimationFrame(this.renderBind, 1100)
+            this.timer = requestAnimationFrame(this.renderBind)
         }
     }
 
@@ -112,34 +99,27 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     
     moveTaskElem(position) {
         return  new Promise((resolve, reject) => {
-          const taskElems = [...this.element.querySelectorAll('item-sort')]
-          let el = taskElems[position]
-          const newPos = ~~el.dataset.required_position
-          let el2 = taskElems[newPos]
-          
-          
-         
-          const from = el.getBoundingClientRect()
-          const to = el2.getBoundingClientRect()
-         
-          const animDelta = (to.top - from.top);
-          
-          const complete = () => {
-              console.log('transition finished.')
-                 el.dataset.ypos = 0
-                 el2.dataset.ypos = 0
-                 this.element.insertBefore(el2, el);
-                                  
-                 el.item.removeEventListener("transitionend", complete)
-                 resolve(true);
-          }
+            const taskElems = [...this.element.querySelectorAll('item-sort')]
+            let el = taskElems[position]
+            const newPos = ~~el.dataset.required_position
+            let el2 = taskElems[newPos]
+
+            const from = el.getBoundingClientRect()
+            const to = el2.getBoundingClientRect()         
+            const animDelta = (to.top - from.top)
+
+            const complete = (e) => {              
+              el.dataset.ypos = 0
+              el2.dataset.ypos = 0
+              this.element.insertBefore(el2, el)
+              el.item.removeEventListener("transitionend", complete)
+              resolve(true);
+            }
           
             el.item.addEventListener("transitionend", complete)
         
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta
-           
-
       });
     }
               

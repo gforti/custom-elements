@@ -52,9 +52,6 @@ window.customElements.define('item-sort', class extends HTMLElement {
         this.shadowRoot.appendChild(this.generateTemplate().content.cloneNode(true))
         this.element = this.shadowRoot.querySelector('div')        
     }
-
-    connectedCallback() {
-    }
     
     get item(){
         return this.element
