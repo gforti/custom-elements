@@ -128,17 +128,45 @@
                 
               ];
            
-            document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
+           document.addEventListener('DOMContentLoaded', ()=>{
+                
+                addItems (taskData)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
+            })
+            
+            
+            
+            function addItems (data) {
+                let auto = document.querySelector('auto-sort').items
+                let frag = document.createDocumentFragment()
+                 data.forEach( (elem) => {  
+                 const item = auto.querySelector(`#task-${elem.id}`)
+                 if ( !item ) {
+                     let newItem = document.createElement('item-sort')
+                     newItem.innerHTML = elem.name
+                     newItem.setAttribute('id', `task-${elem.id}`)
+                     newItem.dataset.required_position = elem.required_position
+                     frag.appendChild(newItem)
+                 }
+               });
+                auto.appendChild(frag)  
+            }
+           
+           
+            
             
             setTimeout(() => {
+                addItems (taskData2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
             },1000)
             
             setTimeout(() => {
+                 addItems (taskData3)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData3)
             },4000)
             
             setTimeout(() => {
+                addItems (taskData4)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
             },5000)
             </script>

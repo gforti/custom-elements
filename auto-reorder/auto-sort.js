@@ -32,6 +32,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         }
     }
     
+    get items(){
+        return this.element
+    }
+    
     isPositionsUnique(val) {
         
         let newData = JSON.parse(val)
@@ -62,21 +66,21 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             return
         }
         
-        let frag = document.createDocumentFragment()
+        //let frag = document.createDocumentFragment()
         JSON.parse(val).forEach( (elem) => {  
             const item = this.element.querySelector(`#task-${elem.id}`)
             if ( !item ) {
-                let newItem = document.createElement('item-sort')
+                /*let newItem = document.createElement('item-sort')
                 newItem.innerHTML = elem.name
                 newItem.setAttribute('id', `task-${elem.id}`)
                 newItem.dataset.required_position = elem.required_position
-                frag.appendChild(newItem)
+                frag.appendChild(newItem)*/
             } else {                
                 item.dataset.required_position = elem.required_position  
             }
           });
           
-          this.element.appendChild(frag)          
+          //this.element.appendChild(frag)
         
           if (null === this.timer){
             this.timer = requestAnimationFrame(this.renderBind)
@@ -101,8 +105,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         return  new Promise((resolve, reject) => {
             const taskElems = [...this.element.querySelectorAll('item-sort')]
             let el = taskElems[position]
+            if (!el) resolve(false)
             const newPos = ~~el.dataset.required_position
             let el2 = taskElems[newPos]
+            if (!el2) resolve(false)
 
             const from = el.getBoundingClientRect()
             const to = el2.getBoundingClientRect()         
