@@ -7,8 +7,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         template.innerHTML = `
             <style>
                 article {
-                position: relative;
-                padding: 0 1em;
+                               
               }
         
             </style>
@@ -24,8 +23,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.shadowRoot.appendChild(this.generateTemplate().content.cloneNode(true))
         this.element = this.shadowRoot.querySelector('article')
         this.slotNodes = []
-        this.timer = null
-        this.timer2 = null        
+        this.timer = null      
         this.renderBind = this.render.bind(this)        
         this.taskData = new Map();
         // this.functionBind = this.function.bind(this)
@@ -93,8 +91,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
           
           this.element.appendChild(frag)          
         
-          if (null === this.timer && null === this.timer2){
-            this.timer = setTimeout(this.renderBind, 1100)
+          if (null === this.timer){
+            this.timer = requestAnimationFrame(this.renderBind, 1100)
         }
     }
 
@@ -105,46 +103,44 @@ window.customElements.define('auto-sort', class extends HTMLElement {
        
          if ( index > -1) {
             await this.moveTaskElem(index) 
-            this.timer = setTimeout(this.renderBind, 500)
+            this.timer = requestAnimationFrame(this.renderBind)
          } else {
              this.timer = null
-             this.timer2 = null
          }
   
     }
     
     moveTaskElem(position) {
         return  new Promise((resolve, reject) => {
-          let taskElems = [...this.element.querySelectorAll('item-sort')]
-          let newPos = ~~taskElems[position].dataset.required_position
+          const taskElems = [...this.element.querySelectorAll('item-sort')]
+          let el = taskElems[position]
+          const newPos = ~~el.dataset.required_position
+          let el2 = taskElems[newPos]
+          
+          
          
-          const from = taskElems[position].getBoundingClientRect();
-          const to = taskElems[newPos].getBoundingClientRect();
+          const from = el.getBoundingClientRect()
+          const to = el2.getBoundingClientRect()
          
-          const tweenAmount = 10;
           const animDelta = (to.top - from.top);
-
-          let moves = new Array(tweenAmount).fill(0).map( (v, i) => animDelta*i/tweenAmount)
-
-          this.moveit(resolve, moves, taskElems[position], taskElems[newPos])
+          
+          const complete = () => {
+              console.log('transition finished.')
+                 el.dataset.ypos = 0
+                 el2.dataset.ypos = 0
+                 this.element.insertBefore(el2, el);
+                                  
+                 el.item.removeEventListener("transitionend", complete)
+                 resolve(true);
+          }
+          
+            el.item.addEventListener("transitionend", complete)
+        
+            el.dataset.ypos = animDelta
+            el2.dataset.ypos = -animDelta
+           
 
       });
-    }
-        
-    moveit(resolve, move, el, el2) {            
-        let by1 = move.shift()
-        el.dataset.ypos = by1
-        el2.dataset.ypos = -by1
-
-        if (move.length) {
-            this.timer2 = setTimeout(this.moveit.bind(this), 50, resolve, move, el, el2)
-        } else {
-           console.log('----COMPLETED-----------------')               
-            this.element.insertBefore(el2, el);
-            el.dataset.ypos = 0
-            el2.dataset.ypos = 0
-            resolve(true);
-        }
     }
               
 });

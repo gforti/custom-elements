@@ -19,10 +19,12 @@ window.customElements.define('item-sort', class extends HTMLElement {
                     word-wrap: break-word;
                    
                 }
-        
+                .elem_animate {
+                    transition: transform 1s;
+                }
                 .task_elem_animate {
-                    animation-duration: 1.1s;
-                    animation-name: slide;
+                    animation-duration: 1s;
+                    animation-name: slide;                    
                   }
                   @keyframes slide {
                     from {
@@ -35,12 +37,11 @@ window.customElements.define('item-sort', class extends HTMLElement {
                       opacity: 1;
                       margin-left: 0vw;
                       margin-right: 0vw;
-
                     }
                   }
 
             </style>
-            <div class="task_elem_animate"><slot></slot></div>            
+            <div class="task_elem_animate elem_animate"><slot></slot></div>            
         `
         return template
     }
@@ -49,59 +50,42 @@ window.customElements.define('item-sort', class extends HTMLElement {
         super()
         this.attachShadow({ mode: 'open' })
         this.shadowRoot.appendChild(this.generateTemplate().content.cloneNode(true))
-        this.element = this.shadowRoot.querySelector('div')
-        // this.functionBind = this.function.bind(this)
-        /*
-         * 
-         * Todo: set tranform at div to simulate move.
-         */
+        this.element = this.shadowRoot.querySelector('div')        
     }
 
     connectedCallback() {
-        //console.log('Custom element added to page.')
-        // this.element.addEventListener('click', this.functionBind)
-        this.render()
+    }
+    
+    get item(){
+        return this.element
     }
     
     disconnectedCallback() {
-        // remove event listeners
-        //console.log('Custom element removed from page.')
         this.element.classList.remove('task_elem_animate')
-        // this.element.removeEventListener('click', this.functionBind)
-    }
-
-    adoptedCallback() {
-        //console.log('Custom element moved to new page.')
     }
 
     static get observedAttributes() {
-      return ['data-requiredPosition', 'data-ypos'];
+      return ['data-requiredPosition', 'data-ypos']
     }
 
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
             if ( attr ==='data-ypos') {
                 this.setTranslate(newValue)
-            } else
+            } else {
                 this.element.dataset.requiredPosition = newValue
-            //this.render()
-        }
-        
-    }
-
-    render() {
-       
+            }
+        }        
     }
     
-    setTranslate( yPos) {
+    setTranslate(yPos) {
+        if ( yPos == 0) {
+            this.element.classList.remove('elem_animate')
+        } else {
+            this.element.classList.add('elem_animate')
+        }
         this.element.style.transform = `translate(0px, ${yPos}px)`;
     }
-    
-    /* function.bind() {
-            this.dispatchEvent(new CustomEvent('{{name}}-click', { detail: this.element.value }))
-        }
-     */
-
 
 });
 
