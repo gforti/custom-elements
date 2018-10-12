@@ -28,7 +28,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
-            this.setdata(newValue)            
+            this.setItemData(newValue)            
         }
     }
     
@@ -36,7 +36,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         return this.element
     }
     
-    isPositionsUnique(val) {
+    validatePositions(val) {
         
         let newData = JSON.parse(val)
         const tempMap = new Map(this.taskData.entries())
@@ -59,29 +59,29 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         return true
     }
     
-    setdata(val) {
+    insertItemSort() {
+        
+    }
+    
+    setItemData(val) {
         try {
-            this.isPositionsUnique(val)
+            this.validatePositions(val)
         } catch(e) {
             return
         }
         
-        //let frag = document.createDocumentFragment()
         JSON.parse(val).forEach( (elem) => {  
             const item = this.element.querySelector(`#task-${elem.id}`)
-            if ( !item ) {
+            if ( item ) {
+                item.dataset.required_position = elem.required_position 
                 /*let newItem = document.createElement('item-sort')
                 newItem.innerHTML = elem.name
                 newItem.setAttribute('id', `task-${elem.id}`)
                 newItem.dataset.required_position = elem.required_position
-                frag.appendChild(newItem)*/
-            } else {                
-                item.dataset.required_position = elem.required_position  
-            }
+                this.element.appendChild(newItem)*/
+            } 
           });
-          
-          //this.element.appendChild(frag)
-        
+                  
           if (null === this.timer){
             this.timer = requestAnimationFrame(this.renderBind)
         }
