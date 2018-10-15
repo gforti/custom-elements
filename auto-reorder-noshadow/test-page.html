@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            div {
+                width:50%;
+                margin: 1rem auto;
+                    
+            }
+            
+            auto-sort {
+                color: red;
+            }
+            
+            
+
+            col-sort {
+               flex: 1;
+               padding: .1rem;
+           } 
+            auto-sort row-sort:nth-child(odd) {
+                background-color: #eee;
+            }
+
+            auto-sort row-sort:nth-child(even) {
+                background-color:#fff;
+            }
+            
+            
+            
+            
+            row-sort {
+                    display: flex;  
+                    padding: .4rem;
+                }
+                
+                .elem_animate {
+                    transition: transform 1s;
+                }
+                .task_elem_animate {
+                    animation-duration: 1s;
+                    animation-name: slide;                    
+                  }
+                  @keyframes slide {
+                    from {
+                      opacity: 0.2;                  
+                      margin-left:-100vw;
+                      margin-right:100vw;
+
+                    }
+                    to {
+                      opacity: 1;
+                      margin-left: 0vw;
+                      margin-right: 0vw;
+                    }
+                  }
+
+            
+           
+        </style>
+    </head>
+    <body>
+        
+        
+        <div>
+            <auto-sort></auto-sort>           
+        </div>
+        
+        <script type="module" src="index.js"></script>
+        
+        <script defer>
+            const taskData = [
+                {
+                  id: 1,
+                  name: 'London',
+                  required_position: 2
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 0
+                },
+                {
+                  id: 3,
+                  name: 'Madrid',
+                  required_position: 1
+                },
+                {
+                  id: 4,
+                  name: 'Canberra',
+                  required_position: 3
+                }
+              ];
+              
+              
+              
+              const taskData2 = [                
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 5
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 4
+                },
+                 {
+                  id: 1,
+                  name: 'London',
+                  required_position: 0
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 2
+                },
+              ];
+              
+              
+              const taskData3 = [                
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 2
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 1
+                },
+                 {
+                  id: 1,
+                  name: 'London',
+                  required_position: 5
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 4
+                },
+              ];
+              
+              
+              const taskData4 = [                
+                {
+                  id: 1,
+                  name: 'London',
+                  required_position: 5
+                },
+                {
+                  id: 2,
+                  name: 'Moscow',
+                  required_position: 4
+                },
+                {
+                  id: 3,
+                  name: 'Madrid',
+                  required_position: 3
+                },
+                {
+                  id: 4,
+                  name: 'Canberra',
+                  required_position: 2
+                },
+                {
+                  id: 5,
+                  name: 'Boston',
+                  required_position: 1
+                },
+                {
+                  id: 6,
+                  name: 'Bronx',
+                  required_position: 0
+                },
+                
+              ];
+           
+           document.addEventListener('DOMContentLoaded', ()=>{
+                
+                addItems (taskData)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
+            })
+            
+            
+            
+            function addItems (data) {
+                let auto = document.querySelector('auto-sort').items
+                let frag = document.createDocumentFragment()
+               
+                 data.forEach( (elem) => {  
+                 const item = auto.querySelector(`#task-${elem.id}`)                 
+                 if ( !item ) {
+                     let newItem = document.createElement('row-sort')
+                     newItem.innerHTML = `<col-sort data-display="${elem.name}"></col-sort> <col-sort data-display="${elem.name}"></col-sort>`
+                     newItem.setAttribute('id', `task-${elem.id}`)
+                     newItem.dataset.required_position = elem.required_position
+                     frag.appendChild(newItem)
+                 }
+               });
+                auto.appendChild(frag)  
+            }
+           
+           
+            setTimeout(() => {
+                addItems (taskData2)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
+            },1000)
+            
+            setTimeout(() => {
+                 addItems (taskData3)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData3)
+            },4000)
+            
+            setTimeout(() => {
+                addItems (taskData4)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
+            },5000)
+
+            </script>
+        
+    </body>
+</html>
