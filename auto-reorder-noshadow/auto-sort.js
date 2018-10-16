@@ -1,68 +1,41 @@
 window.customElements.define('auto-sort', class extends HTMLElement {
 
-    generateTemplate() {
-
-        const template = document.createElement('template')
-
-        template.innerHTML = `
-            <style>
-            row-sort {
-                width: 100%;
-                   }
-
-                 col-sort {
-                    flex: 1;
-                    padding: .1rem;
-                } 
-            row-sort:nth-child(odd) {
-                background-color: #eee;
-            }
-
-            row-sort:nth-child(even) {
-                background-color:#fff;
-            }
-            </style>
-            <article>
-            </article>
-        `
-        return template
-    }
-
     constructor() {
-        super()
-        //this.attachShadow({ mode: 'open' })
-        //this.shadowRoot.appendChild(this.generateTemplate().content.cloneNode(true))
-        //this.element = this.shadowRoot.querySelector('article')
-        this.slotNodes = []
+        super()        
+        this.rows = []
         this.timer = null      
         this.renderBind = this.render.bind(this)        
-        this.taskData = new Map();
+        this.rowData = new Map()
+        this.headerData = new Map()
     }
 
     static get observedAttributes() {
-      return ['data-items']
+      return ['data-items', 'data-headers']
     }
 
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
-            this.setItemData(newValue)            
+            if ( attr === 'data-items')
+                this.setItemData(newValue)  
+            if ( attr === 'data-headers')
+                this.setHeaders(newValue)
         }
     }
     
-    get items(){
+    get autoSort(){
         return this
     }
-    
+  
     validatePositions(val) {
         
         let newData = JSON.parse(val)
-        const tempMap = new Map(this.taskData.entries())
+        const tempMap = new Map(this.rowData.entries())
         
          newData.forEach( (elem) => { 
             tempMap.set(elem.id, elem)
          })
          
-         let newPositions = [...tempMap.values()].reduce((accumulator, currentValue) => accumulator.concat(currentValue.required_position),[])
+         let newPositions = [...tempMap.values()].reduce((accumulator, currentValue) => accumulator.concat(currentValue.requiredPosition),[])
          let setPos = new Set(newPositions)
          const allPositionsExist = newPositions.every((v) => v < newPositions.length)
          if (!allPositionsExist || setPos.size !== newPositions.length) {
@@ -71,13 +44,73 @@ window.customElements.define('auto-sort', class extends HTMLElement {
          }
          
         newData.forEach( (elem) => { 
-            this.taskData.set(elem.id, elem)
+            this.rowData.set(elem.id, elem)
         })
+        
+        this.insertRowSort()
         return true
     }
     
-    insertItemSort() {
+    insertRowSort() {
+               
+        let frag = document.createDocumentFragment()
+        this.rowData.forEach( (elem) => {
+            const item = this.autoSort.querySelector(`#row-${elem.id}`)
+            if ( !item ) {
+                let rowSort = document.createElement('row-sort')
+                this.headerData.forEach( (label, id) => {
+                    const col = document.createElement('col-sort')                   
+                    col.dataset.display = elem[id] || ''
+                    rowSort.appendChild(col)
+                })
+                rowSort.setAttribute('id', `row-${elem.id}`)
+                rowSort.dataset.requiredPosition = elem.requiredPosition
+                frag.appendChild(rowSort)
+            }            
+            
+        })
+                 
+        this.autoSort.appendChild(frag)        
         
+    }
+    
+    setHeaders(val) {
+        let headerData = []
+        try {
+            headerData = JSON.parse(val)  
+        } catch(e){
+            return
+        }
+        
+        this.headerData = new Map()
+        const row = document.createElement('div')
+        row.setAttribute('id', `header`)
+        headerData.forEach( (elem) => { 
+            this.headerData.set(elem.id, elem.label)
+            const col = document.createElement('col-sort')
+            col.dataset.display = elem.label
+            row.appendChild(col)
+        });
+        const header = this.autoSort.querySelector('#header')
+        if (header) {
+            this.autoSort.replaceChild(row, header);
+        } else {
+            this.autoSort.prepend(row)
+        }
+        
+        this.updateCols()
+    }
+    
+    updateCols() {
+        this.rowData.forEach( (elem) => {  
+            const row = this.autoSort.querySelector(`#row-${elem.id}`)            
+            if ( row ) {
+                let cols = [...row.querySelectorAll('col-sort')]                
+                this.headerData.forEach( (label, id) => {
+                    cols.shift().dataset.display = elem[id]  || ''
+                })                
+            } 
+        })
     }
     
     setItemData(val) {
@@ -87,17 +120,14 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             return
         }
         
-        JSON.parse(val).forEach( (elem) => {  
-            const item = this.items.querySelector(`#task-${elem.id}`)
+        this.updateCols()
+        
+        this.rowData.forEach( (elem) => {  
+            const item = this.autoSort.querySelector(`#row-${elem.id}`)
             if ( item ) {
-                item.dataset.required_position = elem.required_position
-                /*let newItem = document.createElement('item-sort')
-                newItem.innerHTML = elem.name
-                newItem.setAttribute('id', `task-${elem.id}`)
-                newItem.dataset.required_position = elem.required_position
-                this.element.appendChild(newItem)*/
+                item.dataset.requiredPosition = elem.requiredPosition                
             } 
-          });
+        })
                   
           if (null === this.timer){
             this.timer = requestAnimationFrame(this.renderBind)
@@ -106,8 +136,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
     async render() {
       
-        this.slotNodes = [...this.items.querySelectorAll('row-sort')]
-        let index = this.slotNodes.findIndex( (slot,i) => i !== ~~slot.dataset.required_position )
+        this.rows = [...this.autoSort.querySelectorAll('row-sort')]
+        let index = this.rows.findIndex( (slot,i) => i !== ~~slot.dataset.requiredPosition )
        
          if ( index > -1) {
             await this.moveTaskElem(index) 
@@ -120,10 +150,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     
     moveTaskElem(position) {
         return  new Promise((resolve, reject) => {
-            const taskElems = [...this.items.querySelectorAll('row-sort')]
+            const taskElems = [...this.autoSort.querySelectorAll('row-sort')]
             let el = taskElems[position]
             if (!el) resolve(false)
-            const newPos = ~~el.dataset.required_position
+            const newPos = ~~el.dataset.requiredPosition
             let el2 = taskElems[newPos]
             if (!el2) resolve(false)
 
@@ -133,14 +163,14 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
             const complete = (e) => {              
               
-              this.items.insertBefore(el2, el)
+              this.autoSort.insertBefore(el2, el)
               el.dataset.ypos = 0
               el2.dataset.ypos = 0
-              el.item.removeEventListener("transitionend", complete)
+              el.row.removeEventListener("transitionend", complete)
               resolve(true);
             }
           
-            el.item.addEventListener("transitionend", complete)
+            el.row.addEventListener("transitionend", complete)
         
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta

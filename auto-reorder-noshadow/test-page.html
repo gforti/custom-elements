@@ -5,24 +5,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-            div {
-                width:50%;
-                margin: 1rem auto;
-                    
-            }
-            
+                        
             auto-sort {
-                color: red;
+                color: #52545b;
+                font-family: sans-serif;
+                font-size: 0.8rem;
             }
             
-            
-
             col-sort {
                flex: 1;
                padding: .1rem;
            } 
+           
+           
             auto-sort row-sort:nth-child(odd) {
-                background-color: #eee;
+                background-color: #f2f2f2;
             }
 
             auto-sort row-sort:nth-child(even) {
@@ -34,7 +31,23 @@
             
             row-sort {
                     display: flex;  
-                    padding: .4rem;
+                    padding: .4rem 0;
+                }
+                
+                auto-sort #header {
+                    display: flex; 
+                    background-color: #ebf3ff;
+                    color: #4b96ff;
+                    font-weight: 600;
+                    
+                }
+                auto-sort #header col-sort {
+                    border-right: 1px solid #d9d9d9;
+                    padding: .5rem;
+                }
+                
+                auto-sort #header col-sort:last-child {
+                   border-right-width: 0;
                 }
                 
                 .elem_animate {
@@ -72,26 +85,125 @@
         <script type="module" src="index.js"></script>
         
         <script defer>
+            
+            const headers = [
+                { 
+                    id: 'deliveryId',
+                    label: 'Delivery ID'
+                },
+                { 
+                    id: 'date',
+                    label: 'Date'
+                },
+                
+                { 
+                    id: 'carrier',
+                    label: 'Carrier'
+                },
+                { 
+                    id: 'status',
+                    label: 'Status'
+                },
+                { 
+                    id: 'eta',
+                    label: 'ETA'
+                },
+                { 
+                    id: 'temp',
+                    label: 'Temp Conditions'
+                },
+                { 
+                    id: 'pallets',
+                    label: 'Pallets'
+                },
+                { 
+                    id: 'site',
+                    label: 'Site'
+                },
+            ]
+            
+             const headers2 = [
+                { 
+                    id: 'deliveryId',
+                    label: 'Delivery ID'
+                },
+                { 
+                    id: 'site',
+                    label: 'Site'
+                },
+                { 
+                    id: 'date',
+                    label: 'Date'
+                },                
+                { 
+                    id: 'carrier',
+                    label: 'Carrier'
+                },
+                { 
+                    id: 'status',
+                    label: 'Status'
+                },
+                { 
+                    id: 'eta',
+                    label: 'ETA'
+                },
+                { 
+                    id: 'temp',
+                    label: 'Temp Conditions'
+                },
+                { 
+                    id: 'pallets',
+                    label: 'Pallets'
+                },
+            ]
             const taskData = [
                 {
                   id: 1,
-                  name: 'London',
-                  required_position: 2
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 2
                 },
                 {
                   id: 2,
-                  name: 'Moscow',
-                  required_position: 0
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 0
                 },
                 {
                   id: 3,
-                  name: 'Madrid',
-                  required_position: 1
+                  deliveryId: 3,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Madrid',
+                  requiredPosition: 1
                 },
                 {
                   id: 4,
-                  name: 'Canberra',
-                  required_position: 3
+                  deliveryId: 4,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Canberra',
+                  requiredPosition: 3
                 }
               ];
               
@@ -100,23 +212,51 @@
               const taskData2 = [                
                 {
                   id: 5,
-                  name: 'Boston',
-                  required_position: 5
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 5
                 },
                 {
                   id: 6,
-                  name: 'Bronx',
-                  required_position: 4
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Bronx',
+                  requiredPosition: 4
                 },
                  {
                   id: 1,
-                  name: 'London',
-                  required_position: 0
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 0
                 },
                 {
                   id: 2,
-                  name: 'Moscow',
-                  required_position: 2
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 2
                 },
               ];
               
@@ -124,23 +264,51 @@
               const taskData3 = [                
                 {
                   id: 5,
-                  name: 'Boston',
-                  required_position: 2
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 2
                 },
                 {
                   id: 6,
-                  name: 'Bronx',
-                  required_position: 1
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Bronx',
+                  requiredPosition: 1
                 },
                  {
                   id: 1,
-                  name: 'London',
-                  required_position: 5
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 5
                 },
                 {
                   id: 2,
-                  name: 'Moscow',
-                  required_position: 4
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 4
                 },
               ];
               
@@ -148,75 +316,97 @@
               const taskData4 = [                
                 {
                   id: 1,
-                  name: 'London',
-                  required_position: 5
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 5
                 },
                 {
                   id: 2,
-                  name: 'Moscow',
-                  required_position: 4
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 4
                 },
                 {
                   id: 3,
-                  name: 'Madrid',
-                  required_position: 3
+                  deliveryId: 3,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Madrid',
+                  requiredPosition: 3
                 },
                 {
                   id: 4,
-                  name: 'Canberra',
-                  required_position: 2
+                  deliveryId: 4,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Canberra',
+                  requiredPosition: 2
                 },
                 {
                   id: 5,
-                  name: 'Boston',
-                  required_position: 1
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 1
                 },
                 {
                   id: 6,
-                  name: 'Bronx',
-                  required_position: 0
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  palletssss: 10,
+                  site: 'Bronx',
+                  requiredPosition: 0
                 },
                 
               ];
            
-           document.addEventListener('DOMContentLoaded', ()=>{
-                
-                addItems (taskData)
+           document.addEventListener('DOMContentLoaded', ()=>{                
+ 
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
             })
-            
-            
-            
-            function addItems (data) {
-                let auto = document.querySelector('auto-sort').items
-                let frag = document.createDocumentFragment()
-               
-                 data.forEach( (elem) => {  
-                 const item = auto.querySelector(`#task-${elem.id}`)                 
-                 if ( !item ) {
-                     let newItem = document.createElement('row-sort')
-                     newItem.innerHTML = `<col-sort data-display="${elem.name}"></col-sort> <col-sort data-display="${elem.name}"></col-sort>`
-                     newItem.setAttribute('id', `task-${elem.id}`)
-                     newItem.dataset.required_position = elem.required_position
-                     frag.appendChild(newItem)
-                 }
-               });
-                auto.appendChild(frag)  
-            }
-           
-           
+                       
             setTimeout(() => {
-                addItems (taskData2)
+                
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
             },1000)
             
             setTimeout(() => {
-                 addItems (taskData3)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData3)
             },4000)
             
             setTimeout(() => {
-                addItems (taskData4)
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
             },5000)
 
