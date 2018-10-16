@@ -55,6 +55,10 @@
                     color: #4cdab6;
                 }
                 
+                .row-sort-exit-animate {
+                    transition: opacity 1s;
+                    opacity: 0;
+                }
                 .row-sort-animate {
                     transition: transform 1s;
                 }
@@ -330,7 +334,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'London',
-                  requiredPosition: 5
+                  requiredPosition: 50
                 },
                 {
                   id: 2,
@@ -342,7 +346,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'Moscow',
-                  requiredPosition: 4
+                  requiredPosition: 40
                 },
                 {
                   id: 3,
@@ -416,6 +420,11 @@
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
             },5000)
 
+
+
+            setTimeout(() => {
+                document.querySelector('auto-sort').removeRow(5)
+            },8000)
             </script>
         
     </body>

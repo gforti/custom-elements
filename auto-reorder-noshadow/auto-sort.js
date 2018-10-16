@@ -31,10 +31,9 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             tempMap.set(elem.id, elem)
          })
          
-         let newPositions = [...tempMap.values()].reduce((accumulator, currentValue) => accumulator.concat(currentValue.requiredPosition),[])
+         let newPositions = [...tempMap.values()].reduce((acc, cv) => acc.concat(cv.requiredPosition),[])
          let setPos = new Set(newPositions)
-         const allPositionsExist = newPositions.every((v) => v < newPositions.length)
-         if (!allPositionsExist || setPos.size !== newPositions.length) {
+         if (setPos.size !== newPositions.length) {
             throw new Error(`Position  conflict with new data`)
             return false
          }
@@ -117,6 +116,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         try {
             this.validatePositions(val)
         } catch(e) {
+            console.log(e)
             return
         }
         
@@ -137,23 +137,25 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     async render() {
 
         this.rows = [...this.querySelectorAll('row-sort')]
-        let index = this.rows.findIndex( (slot,i) => i !== ~~slot.dataset.requiredPosition )
-
-         if ( index > -1) {
-            await this.moveTaskElem(index) 
-            this.timer = requestAnimationFrame(this.renderBind)
-         } else {
-             this.timer = null
-         }
+        const positions = this.rows.reduce((acc, row) => acc.concat(~~row.dataset.requiredPosition), [])
+        const correctPositions = positions.slice().sort()        
+        const index = positions.findIndex( (slot,i) => slot !== correctPositions[i] )        
+       // Still need to consider just moving to the spot not switch
+        if ( index > -1) {
+            const changeto = correctPositions.findIndex( (slot,i) => slot === positions[index] )
+           await this.moveTaskElem(index, changeto) 
+           this.timer = requestAnimationFrame(this.renderBind)
+        } else {
+            this.timer = null
+        }
 
     }
 
-    moveTaskElem(position) {
+    moveTaskElem(position, newPos) {
         return  new Promise((resolve, reject) => {
             const taskElems = [...this.querySelectorAll('row-sort')]
             let el = taskElems[position]
             if (!el) resolve(false)
-            const newPos = ~~el.dataset.requiredPosition
             let el2 = taskElems[newPos]
             if (!el2) resolve(false)
 
@@ -174,6 +176,22 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta
       })
+    }
+    
+    removeRow(id) {
+        return  new Promise((resolve, reject) => {
+            this.rowData.delete(id)
+            const row = this.querySelector(`#row-${id}`)
+            if ( row ) {
+                row.classList.add('row-sort-exit-animate')
+                row.addEventListener("transitionend", (e) => {
+                    row.remove()
+                    resolve(true)
+                })
+            } else {
+                resolve(true)
+            }
+        })
     }
 
 })
