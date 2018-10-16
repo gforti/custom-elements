@@ -1,10 +1,10 @@
 window.customElements.define('auto-sort', class extends HTMLElement {
 
     constructor() {
-        super()        
+        super()
         this.rows = []
-        this.timer = null      
-        this.renderBind = this.render.bind(this)        
+        this.timer = null
+        this.renderBind = this.render.bind(this)
         this.rowData = new Map()
         this.headerData = new Map()
     }
@@ -18,7 +18,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if ( attr === 'data-items')
                 this.setItemData(newValue)  
             if ( attr === 'data-headers')
-                this.setHeaders(newValue)                
+                this.setHeaders(newValue)
         }
     }
   
@@ -46,7 +46,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.insertRowSort()
         return true
     }
-    
+ 
     insertRowSort() {
                
         let frag = document.createDocumentFragment()
@@ -55,7 +55,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if ( !item ) {
                 let rowSort = document.createElement('row-sort')
                 this.headerData.forEach( (label, id) => {
-                    const col = document.createElement('col-sort')                   
+                    const col = document.createElement('col-sort')
                     col.dataset.display = elem[id] || ''
                     col.classList.add(id)
                     rowSort.appendChild(col)
@@ -63,22 +63,22 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 rowSort.setAttribute('id', `row-${elem.id}`)
                 rowSort.dataset.requiredPosition = elem.requiredPosition
                 frag.appendChild(rowSort)
-            }            
+            }
             
         })
-                 
-        this.appendChild(frag)        
+
+        this.appendChild(frag)
         
     }
-    
+
     setHeaders(val) {
         let headerData = []
         try {
-            headerData = JSON.parse(val)  
+            headerData = JSON.parse(val)
         } catch(e){
             return
         }
-        
+
         this.headerData = new Map()
         const row = document.createElement('div')
         row.setAttribute('id', `header`)
@@ -97,22 +97,22 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         
         this.updateCols()
     }
-    
+
     updateCols() {
         this.rowData.forEach( (elem) => {  
-            const row = this.querySelector(`#row-${elem.id}`)            
+            const row = this.querySelector(`#row-${elem.id}`)
             if ( row ) {
-                let cols = [...row.querySelectorAll('col-sort')]                
+                let cols = [...row.querySelectorAll('col-sort')]
                 this.headerData.forEach( (label, id) => {
                     let col = cols.shift()
                     col.dataset.display = elem[id]  || ''
                     col.removeAttribute('class');
                     col.classList.add(id)
-                })                
+                })
             } 
         })
     }
-    
+
     setItemData(val) {
         try {
             this.validatePositions(val)
@@ -122,32 +122,32 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         
         this.updateCols()
         
-        this.rowData.forEach( (elem) => {  
+        this.rowData.forEach( (elem) => {
             const item = this.querySelector(`#row-${elem.id}`)
             if ( item ) {
-                item.dataset.requiredPosition = elem.requiredPosition                
+                item.dataset.requiredPosition = elem.requiredPosition
             } 
         })
-                  
+
           if (null === this.timer){
             this.timer = requestAnimationFrame(this.renderBind)
         }
     }
 
     async render() {
-      
+
         this.rows = [...this.querySelectorAll('row-sort')]
         let index = this.rows.findIndex( (slot,i) => i !== ~~slot.dataset.requiredPosition )
-       
+
          if ( index > -1) {
             await this.moveTaskElem(index) 
             this.timer = requestAnimationFrame(this.renderBind)
          } else {
              this.timer = null
          }
-  
+
     }
-    
+
     moveTaskElem(position) {
         return  new Promise((resolve, reject) => {
             const taskElems = [...this.querySelectorAll('row-sort')]
@@ -158,11 +158,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if (!el2) resolve(false)
 
             const from = el.getBoundingClientRect()
-            const to = el2.getBoundingClientRect()         
+            const to = el2.getBoundingClientRect()
             const animDelta = (to.top - from.top)
 
-            const complete = (e) => {              
-              
+            const complete = (e) => {
               this.insertBefore(el2, el)
               el.dataset.ypos = 0
               el2.dataset.ypos = 0
@@ -171,10 +170,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             }
           
             el.addEventListener("transitionend", complete)
-        
+
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta
       })
     }
-              
+
 })
