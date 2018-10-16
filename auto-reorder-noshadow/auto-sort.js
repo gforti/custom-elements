@@ -170,11 +170,11 @@ window.customElements.define('auto-sort', class extends HTMLElement {
               this.autoSort.insertBefore(el2, el)
               el.dataset.ypos = 0
               el2.dataset.ypos = 0
-              el.row.removeEventListener("transitionend", complete)
+              el.removeEventListener("transitionend", complete)
               resolve(true);
             }
           
-            el.row.addEventListener("transitionend", complete)
+            el.addEventListener("transitionend", complete)
         
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta

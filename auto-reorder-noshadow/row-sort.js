@@ -5,19 +5,14 @@ window.customElements.define('row-sort', class extends HTMLElement {
     }
         
     connectedCallback() {
-        if ( !this.row.classList.contains('row-sort-animate'))
-            this.row.classList.add('row-sort-new-animate')
+        if ( !this.classList.contains('row-sort-animate'))
+            this.classList.add('row-sort-new-animate')
         
-        this.row.classList.add('row-sort-animate')
+        this.classList.add('row-sort-animate')
     }
-    
-    
-    get row(){
-        return this
-    }
-    
+        
     disconnectedCallback() {
-        this.row.classList.remove('row-sort-new-animate')
+        this.classList.remove('row-sort-new-animate')
     }
 
     static get observedAttributes() {
@@ -34,14 +29,12 @@ window.customElements.define('row-sort', class extends HTMLElement {
     
     setTranslate(yPos) {
         if ( yPos == 0) {
-            this.row.classList.remove('row-sort-animate')
+            this.classList.remove('row-sort-animate')
         } else {
-            this.row.classList.add('row-sort-animate')
+            this.classList.add('row-sort-animate')
         }
-        this.row.style.transform = `translate(0px, ${yPos}px)`;
+        this.style.transform = `translate(0px, ${yPos}px)`
     }
     
-   
-
 });
 

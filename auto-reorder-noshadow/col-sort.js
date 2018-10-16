@@ -4,13 +4,6 @@ window.customElements.define('col-sort', class extends HTMLElement {
         super()       
     }
     
-    get col(){
-        return this
-    }
-    
-    disconnectedCallback() {       
-    }
-
     static get observedAttributes() {
       return ['data-display']
     }
