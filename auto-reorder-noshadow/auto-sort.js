@@ -61,6 +61,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 this.headerData.forEach( (label, id) => {
                     const col = document.createElement('col-sort')                   
                     col.dataset.display = elem[id] || ''
+                    col.classList.add(id)
                     rowSort.appendChild(col)
                 })
                 rowSort.setAttribute('id', `row-${elem.id}`)
@@ -107,7 +108,10 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if ( row ) {
                 let cols = [...row.querySelectorAll('col-sort')]                
                 this.headerData.forEach( (label, id) => {
-                    cols.shift().dataset.display = elem[id]  || ''
+                    let col = cols.shift()
+                    col.dataset.display = elem[id]  || ''
+                    col.removeAttribute('class');
+                    col.classList.add(id)
                 })                
             } 
         })
