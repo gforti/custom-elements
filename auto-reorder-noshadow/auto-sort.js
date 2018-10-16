@@ -10,7 +10,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
 
     static get observedAttributes() {
-      return ['data-items', 'data-headers']
+      return ['data-items', 'data-headers', 'data-remove']
     }
 
     attributeChangedCallback(attr, oldValue, newValue) {
@@ -18,12 +18,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if ( attr === 'data-items')
                 this.setItemData(newValue)  
             if ( attr === 'data-headers')
-                this.setHeaders(newValue)
+                this.setHeaders(newValue)                
         }
-    }
-    
-    get autoSort(){
-        return this
     }
   
     validatePositions(val) {
@@ -55,7 +51,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                
         let frag = document.createDocumentFragment()
         this.rowData.forEach( (elem) => {
-            const item = this.autoSort.querySelector(`#row-${elem.id}`)
+            const item = this.querySelector(`#row-${elem.id}`)
             if ( !item ) {
                 let rowSort = document.createElement('row-sort')
                 this.headerData.forEach( (label, id) => {
@@ -71,7 +67,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             
         })
                  
-        this.autoSort.appendChild(frag)        
+        this.appendChild(frag)        
         
     }
     
@@ -92,11 +88,11 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             col.dataset.display = elem.label
             row.appendChild(col)
         });
-        const header = this.autoSort.querySelector('#header')
+        const header = this.querySelector('#header')
         if (header) {
-            this.autoSort.replaceChild(row, header);
+            this.replaceChild(row, header);
         } else {
-            this.autoSort.prepend(row)
+            this.prepend(row)
         }
         
         this.updateCols()
@@ -104,7 +100,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     
     updateCols() {
         this.rowData.forEach( (elem) => {  
-            const row = this.autoSort.querySelector(`#row-${elem.id}`)            
+            const row = this.querySelector(`#row-${elem.id}`)            
             if ( row ) {
                 let cols = [...row.querySelectorAll('col-sort')]                
                 this.headerData.forEach( (label, id) => {
@@ -127,7 +123,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.updateCols()
         
         this.rowData.forEach( (elem) => {  
-            const item = this.autoSort.querySelector(`#row-${elem.id}`)
+            const item = this.querySelector(`#row-${elem.id}`)
             if ( item ) {
                 item.dataset.requiredPosition = elem.requiredPosition                
             } 
@@ -140,7 +136,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
     async render() {
       
-        this.rows = [...this.autoSort.querySelectorAll('row-sort')]
+        this.rows = [...this.querySelectorAll('row-sort')]
         let index = this.rows.findIndex( (slot,i) => i !== ~~slot.dataset.requiredPosition )
        
          if ( index > -1) {
@@ -154,7 +150,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     
     moveTaskElem(position) {
         return  new Promise((resolve, reject) => {
-            const taskElems = [...this.autoSort.querySelectorAll('row-sort')]
+            const taskElems = [...this.querySelectorAll('row-sort')]
             let el = taskElems[position]
             if (!el) resolve(false)
             const newPos = ~~el.dataset.requiredPosition
@@ -167,7 +163,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
             const complete = (e) => {              
               
-              this.autoSort.insertBefore(el2, el)
+              this.insertBefore(el2, el)
               el.dataset.ypos = 0
               el2.dataset.ypos = 0
               el.removeEventListener("transitionend", complete)
@@ -178,7 +174,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta
-      });
+      })
     }
               
-});
+})
