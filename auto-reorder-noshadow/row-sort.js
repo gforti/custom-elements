@@ -5,10 +5,10 @@ window.customElements.define('row-sort', class extends HTMLElement {
     }
         
     connectedCallback() {
-        if ( !this.row.classList.contains('elem_animate'))
-            this.row.classList.add('task_elem_animate')
+        if ( !this.row.classList.contains('row-sort-animate'))
+            this.row.classList.add('row-sort-new-animate')
         
-        this.row.classList.add('elem_animate')
+        this.row.classList.add('row-sort-animate')
     }
     
     
@@ -17,7 +17,7 @@ window.customElements.define('row-sort', class extends HTMLElement {
     }
     
     disconnectedCallback() {
-        this.row.classList.remove('task_elem_animate')
+        this.row.classList.remove('row-sort-new-animate')
     }
 
     static get observedAttributes() {
@@ -34,9 +34,9 @@ window.customElements.define('row-sort', class extends HTMLElement {
     
     setTranslate(yPos) {
         if ( yPos == 0) {
-            this.row.classList.remove('elem_animate')
+            this.row.classList.remove('row-sort-animate')
         } else {
-            this.row.classList.add('elem_animate')
+            this.row.classList.add('row-sort-animate')
         }
         this.row.style.transform = `translate(0px, ${yPos}px)`;
     }
