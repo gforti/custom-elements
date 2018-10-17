@@ -5,10 +5,10 @@ window.customElements.define('row-sort', class extends HTMLElement {
     }
         
     connectedCallback() {
-        if ( !this.classList.contains('row-sort-animate'))
+        if ( !this.classList.contains('connected'))
             this.classList.add('row-sort-new-animate')
         
-        this.classList.add('row-sort-animate')
+        this.classList.add('row-sort-animate', 'connected')
     }
         
     disconnectedCallback() {

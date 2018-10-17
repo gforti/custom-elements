@@ -5,21 +5,58 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.rows = []
         this.timer = null
         this.renderBind = this.render.bind(this)
+        this.updateRowsBind = this.updateRows.bind(this)
         this.rowData = new Map()
         this.headerData = new Map()
+        this.restarting = false
     }
 
     static get observedAttributes() {
-      return ['data-items', 'data-headers', 'data-remove']
+      return ['data-items', 'data-headers']
     }
 
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
-            if ( attr === 'data-items')
+            if ( attr === 'data-items') {
+                
+                cancelAnimationFrame(this.timer)
+                this.timer = null                
                 this.setItemData(newValue)  
+            }
             if ( attr === 'data-headers')
                 this.setHeaders(newValue)
         }
+    }
+    
+    resetRows() {
+        const taskElems = [...this.querySelectorAll('row-sort')]
+        
+        taskElems.forEach((elem) => {
+            elem.dataset.ypos = 0
+        })
+            
+    }
+    
+    async updateRows() {
+        return new Promise(async (resolve, reject) => {
+            let newData = JSON.parse(this.dataset.items)
+            const diffMap = new Map()
+
+            newData.forEach( (elem) => {
+                diffMap.set(elem.id, elem)
+            })
+
+            let difference = [...this.rowData.keys()].filter(id => !diffMap.has(id))
+            console.log('rows progress removed', difference)
+            const promises = difference.map(this.removeRow.bind(this))
+            console.log(promises)
+            await Promise.all(promises)
+            
+           
+            console.log('resloved delete')
+            this.timer = null
+            resolve(true)
+        })
     }
   
     validatePositions(val) {
@@ -27,22 +64,21 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         let newData = JSON.parse(val)
         const tempMap = new Map(this.rowData.entries())
         
-         newData.forEach( (elem) => { 
-            tempMap.set(elem.id, elem)
-         })
+        newData.forEach( (elem) => { 
+           tempMap.set(elem.id, elem)
+        })
          
          let newPositions = [...tempMap.values()].reduce((acc, cv) => acc.concat(cv.requiredPosition),[])
          let setPos = new Set(newPositions)
          if (setPos.size !== newPositions.length) {
-            throw new Error(`Position  conflict with new data`)
+            throw new Error(`Position conflict with new data`)
             return false
          }
-         
-        newData.forEach( (elem) => { 
+        
+        newData.forEach( (elem) => {
             this.rowData.set(elem.id, elem)
         })
         
-        this.insertRowSort()
         return true
     }
  
@@ -112,15 +148,18 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         })
     }
 
-    setItemData(val) {
+    async setItemData(val) {
+     
         try {
             this.validatePositions(val)
         } catch(e) {
-            console.log(e)
             return
         }
-        
+         
+        this.insertRowSort()
+        console.log('inserts')
         this.updateCols()
+        console.log('updates')
         
         this.rowData.forEach( (elem) => {
             const item = this.querySelector(`#row-${elem.id}`)
@@ -129,7 +168,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             } 
         })
 
-          if (null === this.timer){
+        if (null === this.timer){
             this.timer = requestAnimationFrame(this.renderBind)
         }
     }
@@ -140,13 +179,15 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         const positions = this.rows.reduce((acc, row) => acc.concat(~~row.dataset.requiredPosition), [])
         const correctPositions = positions.slice().sort()        
         const index = positions.findIndex( (slot,i) => slot !== correctPositions[i] )        
-       // Still need to consider just moving to the spot not switch
+       
         if ( index > -1) {
-            const changeto = correctPositions.findIndex( (slot,i) => slot === positions[index] )
-           await this.moveTaskElem(index, changeto) 
+           const changeto = correctPositions.findIndex( (slot,i) => slot === positions[index] )
+           await this.moveTaskElem(index, changeto)
            this.timer = requestAnimationFrame(this.renderBind)
         } else {
             this.timer = null
+            await this.updateRowsBind()
+            this.resetRows()
         }
 
     }
@@ -164,30 +205,35 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             const animDelta = (to.top - from.top)
 
             const complete = (e) => {
-              this.insertBefore(el2, el)
-              el.dataset.ypos = 0
-              el2.dataset.ypos = 0
-              el.removeEventListener("transitionend", complete)
+              if ( el && el2) {
+                this.insertBefore(el2, el)
+                el.dataset.ypos = 0
+                el2.dataset.ypos = 0
+              }
+              if (el) {
+                el.removeEventListener('transitionend', complete)
+              }
               resolve(true);
             }
           
-            el.addEventListener("transitionend", complete)
-
+            el.addEventListener('transitionend', complete)
             el.dataset.ypos = animDelta
             el2.dataset.ypos = -animDelta
       })
     }
     
-    removeRow(id) {
+    async removeRow(id) {        
         return  new Promise((resolve, reject) => {
             this.rowData.delete(id)
             const row = this.querySelector(`#row-${id}`)
             if ( row ) {
                 row.classList.add('row-sort-exit-animate')
                 row.addEventListener("transitionend", (e) => {
-                    row.remove()
-                    resolve(true)
+                    
+                    
                 })
+                row.remove()
+                resolve(true)
             } else {
                 resolve(true)
             }
