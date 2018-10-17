@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+                        
+            auto-sort {
+                color: #52545b;
+                font-family: sans-serif;
+                font-size: 0.8rem;
+            }
+            
+            col-sort {
+               flex: 1;
+               padding: .1rem;
+           } 
+           
+           
+            auto-sort row-sort:nth-child(odd) {
+                background-color: #f2f2f2;
+            }
+
+            auto-sort row-sort:nth-child(even) {
+                background-color:#fff;
+            }
+            
+            
+            
+            
+            row-sort {
+                    display: flex;  
+                    padding: .4rem 0;
+                }
+                
+                auto-sort #header {
+                    display: flex; 
+                    background-color: #ebf3ff;
+                    color: #4b96ff;
+                    font-weight: 600;
+                    
+                }
+                auto-sort #header col-sort {
+                    border-right: 1px solid #d9d9d9;
+                    padding: .5rem;
+                }
+                
+                auto-sort #header col-sort:last-child {
+                   border-right-width: 0;
+                }
+                
+                
+                .temp {
+                    color: #4cdab6;
+                }
+                
+                .row-sort-exit-animate {
+                    transition: opacity 0.4s;
+                    opacity: 0;
+                }
+                .row-sort-animate {
+                    transition: transform 0.2s;
+                }
+                .row-sort-new-animate {
+                    animation-duration: 1s;
+                    animation-name: slide;                    
+                  }
+                  @keyframes slide {
+                    from {
+                      opacity: 0.2;                  
+                      margin-left:-100vw;
+                      margin-right:100vw;
+
+                    }
+                    to {
+                      opacity: 1;
+                      margin-left: 0vw;
+                      margin-right: 0vw;
+                    }
+                  }
+
+            
+           
+        </style>
+    </head>
+    <body>
+        
+        
+        <div>
+            <auto-sort></auto-sort>           
+        </div>
+        
+        <script type="module" src="index.js"></script>
+        
+        <script defer>
+            
+            const headers = [
+                { 
+                    id: 'deliveryId',
+                    label: 'Delivery ID'
+                },
+                { 
+                    id: 'date',
+                    label: 'Date'
+                },
+                
+                { 
+                    id: 'carrier',
+                    label: 'Carrier'
+                },
+                { 
+                    id: 'status',
+                    label: 'Status'
+                },
+                { 
+                    id: 'eta',
+                    label: 'ETA'
+                },
+                { 
+                    id: 'temp',
+                    label: 'Temp Conditions'
+                },
+                { 
+                    id: 'pallets',
+                    label: 'Pallets'
+                },
+                { 
+                    id: 'site',
+                    label: 'Site'
+                },
+            ]
+            
+             const headers2 = [
+                { 
+                    id: 'deliveryId',
+                    label: 'Delivery ID'
+                },
+                { 
+                    id: 'site',
+                    label: 'Site'
+                },
+                { 
+                    id: 'date',
+                    label: 'Date'
+                },                
+                { 
+                    id: 'carrier',
+                    label: 'Carrier'
+                },
+                { 
+                    id: 'status',
+                    label: 'Status'
+                },
+                { 
+                    id: 'eta',
+                    label: 'ETA'
+                },
+               
+                { 
+                    id: 'pallets',
+                    label: 'Pallets'
+                },
+                 { 
+                    id: 'temp',
+                    label: 'Temp Conditions'
+                },
+            ]
+            const taskData = [
+                {
+                  id: 1,
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 2
+                },
+                {
+                  id: 2,
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 0
+                },
+                {
+                  id: 3,
+                  deliveryId: 3,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Madrid',
+                  requiredPosition: 1
+                },
+                {
+                  id: 4,
+                  deliveryId: 4,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Canberra',
+                  requiredPosition: 3
+                }
+              ];
+              
+              
+              
+              const taskData2 = [                
+                {
+                  id: 5,
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 5
+                },
+                {
+                  id: 6,
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Bronx',
+                  requiredPosition: 4
+                },
+                 {
+                  id: 1,
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 0
+                },
+                {
+                  id: 2,
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 2
+                },
+              ];
+              
+              
+              const taskData3 = [                
+                {
+                  id: 5,
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 2
+                },
+                {
+                  id: 6,
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Bronx',
+                  requiredPosition: 1
+                },
+                 {
+                  id: 1,
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 5
+                },
+                {
+                  id: 2,
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 4
+                },
+              ];
+              
+              
+              const taskData4 = [                
+                {
+                  id: 1,
+                  deliveryId: 1,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'London',
+                  requiredPosition: 50
+                },
+                {
+                  id: 2,
+                  deliveryId: 2,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Moscow',
+                  requiredPosition: 40
+                },
+                {
+                  id: 3,
+                  deliveryId: 3,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Madrid',
+                  requiredPosition: 3
+                },
+                {
+                  id: 4,
+                  deliveryId: 4,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Canberra',
+                  requiredPosition: 2
+                },
+                {
+                  id: 5,
+                  deliveryId: 5,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  pallets: 10,
+                  site: 'Boston',
+                  requiredPosition: 1
+                },
+                {
+                  id: 6,
+                  deliveryId: 6,
+                  date: '10/10/2018',
+                  carrier: 'UPS',
+                  status: 'On Time',
+                  eta: '90 hours',
+                  temp: '60°',
+                  palletssss: 10,
+                  site: 'Bronx',
+                  requiredPosition: 0
+                },
+                
+              ];
+           
+           document.addEventListener('DOMContentLoaded', ()=>{                
+ 
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
+            })
+                     
+            setTimeout(() => {
+                
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
+            },1000)
+            
+            
+            setTimeout(() => {
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData3)
+            },4000)
+            
+            setTimeout(() => {
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
+                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
+            },6000)
+
+
+            </script>
+        
+    </body>
+</html>
