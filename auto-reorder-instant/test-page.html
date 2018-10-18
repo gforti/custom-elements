@@ -64,7 +64,7 @@
                    animation-name: fade; 
                 }
                 .row-sort-new-animate {
-                    animation-duration: 0.4s;
+                    animation-duration: 0.2s;
                     animation-name: slide;                    
                 }
                   
@@ -202,7 +202,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'London',
-                  requiredPosition: 0
+                  requiredPosition: 1
                 },
                 {
                   id: 2,
@@ -214,7 +214,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'Moscow',
-                  requiredPosition: 1
+                  requiredPosition: 0
                 },
                 {
                   id: 3,
@@ -226,7 +226,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'Madrid',
-                  requiredPosition: 2
+                  requiredPosition: 3
                 },
                 {
                   id: 4,
@@ -238,7 +238,7 @@
                   temp: '60°',
                   pallets: 10,
                   site: 'Canberra',
-                  requiredPosition: 3
+                  requiredPosition: 4
                 }
               ];
               
@@ -525,22 +525,22 @@
                 
                 document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
-            },10000)
+            },1000)
             
             
             setTimeout(() => {
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData3)
-            },20000)
+            },5000)
             
             setTimeout(() => {
                 document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
-            },30000)
+            },10000)
             
             setTimeout(() => {
                 document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData5)
-            },40000)
+            },15000)
 
 
             </script>

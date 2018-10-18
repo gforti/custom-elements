@@ -16,8 +16,9 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             if ( attr === 'data-items') {               
                 this.render()  
             }
-            if ( attr === 'data-headers')
-                this.setHeaders(newValue)
+            if ( attr === 'data-headers') {
+                this.setHeaders()
+            }
         }
     }
     
@@ -33,7 +34,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     
     async updateRows() {
         return new Promise(async (resolve, reject) => {
-            let newData = JSON.parse(this.dataset.items)
+            const newData = JSON.parse(this.dataset.items) 
+                       
             const diffMap = new Map()
 
             newData.forEach( (elem) => {
@@ -50,40 +52,47 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
 
     async insertRowSort() {
-        return new Promise(async (resolve, reject) => {
-            let frag = document.createDocumentFragment()
-            this.rowData.forEach( (elem) => {
-                const item = this.querySelector(`#row-${elem.id}`)
-                if ( !item ) {
-                    let rowSort = document.createElement('row-sort')
-                    this.headerData.forEach( (label, id) => {
-                        const col = document.createElement('col-sort')
-                        col.dataset.display = elem[id] || ''
-                        col.dataset.col = id
-                        rowSort.appendChild(col)
-                    })
-                    rowSort.setAttribute('id', `row-${elem.id}`)
-                    rowSort.dataset.requiredPosition = elem.requiredPosition
-                    frag.appendChild(rowSort)
-                }
+        return new Promise(async (resolve, reject) => {            
+            const promises = [...this.rowData.values()].map(this.insertNewRow.bind(this))
+            await Promise.all(promises)
+            resolve(true)           
+        })        
+    }
+    
+    
+    insertNewRow(elem){
+         return  new Promise((resolve, reject) => { 
 
-            })
+            const row = this.children.namedItem(`row-${elem.id}`)
+            if ( !row ) {
+                const rowSort = document.createElement('row-sort')
+                this.headerData.forEach( (label, id) => {
+                    const col = document.createElement('col-sort')
+                    col.dataset.display = elem[id] || ''
+                    col.dataset.col = id
+                    rowSort.appendChild(col)
+                })
+                rowSort.setAttribute('id', `row-${elem.id}`)
+                rowSort.dataset.requiredPosition = elem.requiredPosition
 
-            this.appendChild(frag)
-            // promise all based on animation end
-           setTimeout(resolve, 1150)
+                const complete = (e) => {
+                    rowSort.removeEventListener('animationend', complete)                        
+                    resolve(true);
+                }                    
+                rowSort.addEventListener('animationend', complete)
+                this.appendChild(rowSort)
+            } else {
+                resolve(true);
+            }
+            
         })
         
     }
 
-    setHeaders(val) {
-        let headerData = []
-        try {
-            headerData = JSON.parse(val)
-        } catch(e){
-            return
-        }
-
+    setHeaders() {
+        
+        const headerData = JSON.parse(this.dataset.headers)
+        
         this.headerData = new Map()
         const row = document.createElement('div')
         row.setAttribute('id', `header`)
@@ -119,8 +128,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
 
     async render() {
+        const newData = JSON.parse(this.dataset.items)   
         
-        let newData = JSON.parse(this.dataset.items)       
         newData.forEach( (elem) => {
             this.rowData.set(elem.id, elem)
         })
