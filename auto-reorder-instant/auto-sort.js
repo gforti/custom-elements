@@ -5,7 +5,6 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         this.rows = []
         this.rowData = new Map()
         this.headerData = new Map()
-        this.restarting = false
     }
 
     static get observedAttributes() {
@@ -32,17 +31,6 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         }
     }
     
-    
-    
-    resetRows() {
-        const taskElems = [...this.querySelectorAll('row-sort')]
-        
-        taskElems.forEach((elem) => {
-            elem.dataset.ypos = 0
-        })
-            
-    }
-    
     async updateRows() {
         return new Promise(async (resolve, reject) => {
             let newData = JSON.parse(this.dataset.items)
@@ -61,27 +49,30 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         })
     }
 
-    insertRowSort() {
-               
-        let frag = document.createDocumentFragment()
-        this.rowData.forEach( (elem) => {
-            const item = this.querySelector(`#row-${elem.id}`)
-            if ( !item ) {
-                let rowSort = document.createElement('row-sort')
-                this.headerData.forEach( (label, id) => {
-                    const col = document.createElement('col-sort')
-                    col.dataset.display = elem[id] || ''
-                    col.classList.add(id)
-                    rowSort.appendChild(col)
-                })
-                rowSort.setAttribute('id', `row-${elem.id}`)
-                rowSort.dataset.requiredPosition = elem.requiredPosition
-                frag.appendChild(rowSort)
-            }
-            
-        })
+    async insertRowSort() {
+        return new Promise(async (resolve, reject) => {
+            let frag = document.createDocumentFragment()
+            this.rowData.forEach( (elem) => {
+                const item = this.querySelector(`#row-${elem.id}`)
+                if ( !item ) {
+                    let rowSort = document.createElement('row-sort')
+                    this.headerData.forEach( (label, id) => {
+                        const col = document.createElement('col-sort')
+                        col.dataset.display = elem[id] || ''
+                        col.classList.add(id)
+                        rowSort.appendChild(col)
+                    })
+                    rowSort.setAttribute('id', `row-${elem.id}`)
+                    rowSort.dataset.requiredPosition = elem.requiredPosition
+                    frag.appendChild(rowSort)
+                }
 
-        this.appendChild(frag)
+            })
+
+            this.appendChild(frag)
+            // promise all based on animation end
+           setTimeout(resolve, 150)
+        })
         
     }
 
@@ -135,7 +126,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         })
          
         await this.updateRows()
-        this.insertRowSort()
+        await this.insertRowSort()
         this.updateCols()
         
         this.rowData.forEach( (elem) => {
@@ -155,36 +146,21 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         const positions = this.rows.reduce((acc, row) => acc.set(row.id, ~~row.dataset.requiredPosition), new Map())
         const correctPositions = Array.from(positions).slice().sort((a, b)=> a[1] - b[1])
         
-        const promises = correctPositions.map(this.moveTaskElem.bind(this))
+        const promises = correctPositions.map(this.moveRowElem.bind(this))
         await Promise.all(promises)
         
-        this.rows = [...this.querySelectorAll('row-sort')]
-        
-        this.resetRows()
     }
 
-    moveTaskElem(arr, i) {
+    moveRowElem(arr, i) {
         const [id, pos] = arr
     
         return  new Promise((resolve, reject) => {
             const el = this.children.namedItem(id)
-            const el2 = this.children.item(i)
-            
+            const el2 = this.children.item(i)            
             if ( el && el2 && el !== el2) {
-                const from = el.getBoundingClientRect()
-                const to = el2.getBoundingClientRect()
-                const animDelta = (to.bottom - from.top)
-                
-                const complete = (e) => {   
-                    el.dataset.ypos = animDelta
-                    el.removeEventListener('transitionend', complete)
-                  }
-                el2.insertAdjacentElement('afterend', el)
-                el.addEventListener('transitionend', complete)
-                
-                
+               el2.insertAdjacentElement('afterend', el)
             } 
-            resolve(true)
+            resolve(true)            
       })
     }
     
@@ -193,10 +169,14 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             this.rowData.delete(id)
             const row = this.children.namedItem(`row-${id}`)
             if ( row ) {
-                row.classList.add('row-sort-exit-animate')
-                row.remove()
-            } 
-            resolve(true)
+                row.addEventListener('transitionend', (e) => {
+                    row.remove()
+                    resolve(true)
+                })
+                row.classList.add('row-sort-exit-transition')                
+            } else {
+                resolve(true)
+            }
         })
     }
 
