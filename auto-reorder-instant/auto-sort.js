@@ -14,7 +14,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
             if ( attr === 'data-items') {               
-                this.setItemData(newValue)  
+                this.render()  
             }
             if ( attr === 'data-headers')
                 this.setHeaders(newValue)
@@ -59,7 +59,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                     this.headerData.forEach( (label, id) => {
                         const col = document.createElement('col-sort')
                         col.dataset.display = elem[id] || ''
-                        col.classList.add(id)
+                        col.dataset.col = id
                         rowSort.appendChild(col)
                     })
                     rowSort.setAttribute('id', `row-${elem.id}`)
@@ -71,7 +71,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
             this.appendChild(frag)
             // promise all based on animation end
-           setTimeout(resolve, 150)
+           setTimeout(resolve, 1150)
         })
         
     }
@@ -111,23 +111,23 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 this.headerData.forEach( (label, id) => {
                     let col = cols.shift()
                     col.dataset.display = elem[id] || ''
-                    col.removeAttribute('class');
-                    col.classList.add(id)
+                    col.dataset.col = id
                 })
             } 
         })
     }
 
-    async setItemData(val) {
-     
-        let newData = JSON.parse(val)       
+
+    async render() {
+        
+        let newData = JSON.parse(this.dataset.items)       
         newData.forEach( (elem) => {
             this.rowData.set(elem.id, elem)
         })
          
         await this.updateRows()
         await this.insertRowSort()
-        this.updateCols()
+        
         
         this.rowData.forEach( (elem) => {
             const item = this.querySelector(`#row-${elem.id}`)
@@ -136,29 +136,22 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             }
         })
 
-       this.render()
-        
-    }
-
-    async render() {
-
         this.rows = [...this.querySelectorAll('row-sort')]
         const positions = this.rows.reduce((acc, row) => acc.set(row.id, ~~row.dataset.requiredPosition), new Map())
         const correctPositions = Array.from(positions).slice().sort((a, b)=> a[1] - b[1])
         
         const promises = correctPositions.map(this.moveRowElem.bind(this))
         await Promise.all(promises)
-        
+        this.updateCols();
     }
 
     moveRowElem(arr, i) {
-        const [id, pos] = arr
-    
+        const [id, pos] = arr    
         return  new Promise((resolve, reject) => {
             const el = this.children.namedItem(id)
-            const el2 = this.children.item(i)            
-            if ( el && el2 && el !== el2) {
-               el2.insertAdjacentElement('afterend', el)
+            const el2 = this.children.item(i+1)
+            if ( el && el2 && !el.isSameNode(el2)) {
+               el2.insertAdjacentElement('beforebegin', el)
             } 
             resolve(true)            
       })
