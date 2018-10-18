@@ -94,40 +94,63 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         const headerData = JSON.parse(this.dataset.headers)
         
         this.headerData = new Map()
-        const row = document.createElement('div')
-        row.setAttribute('id', `header`)
+        const header = this.querySelector('#header')
+        header.innerHTML = ''
         headerData.forEach( (elem) => { 
             this.headerData.set(elem.id, elem.label)
             const col = document.createElement('col-sort')
             col.dataset.display = elem.label
-            row.appendChild(col)
-        });
-        const header = this.querySelector('#header')
-        if (header) {
-            this.replaceChild(row, header);
-        } else {
-            this.prepend(row)
-        }
-        
-        this.updateCols()
+            header.appendChild(col)
+        })        
+       
+       this.updateCols()
     }
 
     updateCols() {
         this.rowData.forEach( (elem) => {  
-            const row = this.querySelector(`#row-${elem.id}`)
+            const row = this.children.namedItem(`row-${elem.id}`)
             if ( row ) {
+                this.adjustCols(elem.id)
                 let cols = [...row.querySelectorAll('col-sort')]
                 this.headerData.forEach( (label, id) => {
-                    let col = cols.shift()
-                    col.dataset.display = elem[id] || ''
-                    col.dataset.col = id
+                    const col = cols.shift()
+                    if ( col ) {
+                        col.dataset.display = elem[id] || ''
+                        col.dataset.col = id
+                    }
                 })
             } 
         })
     }
+    
+    adjustCols(id) {
+         const row = this.children.namedItem(`row-${id}`)
+         if ( row ) {
+             let cols = row.children.length
+             let headerLen = this.headerData.size
+            
+             if ( cols > headerLen) {
+                while (cols > headerLen) {
+                 cols--
+                 const col = row.children.item(cols)
+                 col.remove()
+                 
+                }
+             }
+             if ( cols < headerLen) {
+                while (cols < headerLen) {
+                    row.appendChild(document.createElement('col-sort'))
+                    cols++
+                }             
+            }
+        }
+         
+    }
 
 
     async render() {
+       
+        if ( !this.headerData.size ) return
         const newData = JSON.parse(this.dataset.items)   
         
         newData.forEach( (elem) => {

@@ -14,7 +14,7 @@
             
             col-sort {
                flex: 1;
-               padding: .1rem;
+               padding: .5rem;
            } 
            
            
@@ -43,7 +43,6 @@
                 }
                 auto-sort #header col-sort {
                     border-right: 1px solid #d9d9d9;
-                    padding: .5rem;
                 }
                 
                 auto-sort #header col-sort:last-child {
@@ -169,14 +168,8 @@
                     id: 'date',
                     label: 'Date'
                 },                
-                { 
-                    id: 'carrier',
-                    label: 'Carrier'
-                },
-                { 
-                    id: 'status',
-                    label: 'Status'
-                },
+                
+                
                 { 
                     id: 'eta',
                     label: 'ETA'
@@ -523,7 +516,7 @@
                      
             setTimeout(() => {
                 
-                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData2)
             },1000)
             
@@ -533,12 +526,12 @@
             },5000)
             
             setTimeout(() => {
-                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
+                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData4)
             },10000)
             
             setTimeout(() => {
-                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
+                // document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers2)
                 document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData5)
             },15000)
 
