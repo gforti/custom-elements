@@ -3,9 +3,6 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     constructor() {
         super()
         this.rows = []
-        this.timer = null
-        this.renderBind = this.render.bind(this)
-        this.updateRowsBind = this.updateRows.bind(this)
         this.rowData = new Map()
         this.headerData = new Map()
         this.restarting = false
@@ -17,10 +14,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
-            if ( attr === 'data-items') {
-                
-                cancelAnimationFrame(this.timer)
-                this.timer = null                
+            if ( attr === 'data-items') {               
                 this.setItemData(newValue)  
             }
             if ( attr === 'data-headers')
@@ -29,9 +23,13 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
     
     
-    connectedCallback() {
-        const row = document.createElement('div')
-        row.setAttribute('id', `header`)
+    connectedCallback() {        
+        const header = this.querySelector('#header')
+        if (!header) {
+            const row = document.createElement('div')
+            row.setAttribute('id', `header`)
+            this.prepend(row)
+        }
     }
     
     
@@ -55,41 +53,14 @@ window.customElements.define('auto-sort', class extends HTMLElement {
             })
 
             let difference = [...this.rowData.keys()].filter(id => !diffMap.has(id))
-            
+                 
             const promises = difference.map(this.removeRow.bind(this))
-            console.log(promises)
             await Promise.all(promises)
             
-           
-            console.log('resloved delete')
-            this.timer = null
             resolve(true)
         })
     }
-  
-    validatePositions(val) {
-        
-        let newData = JSON.parse(val)
-        const tempMap = new Map(this.rowData.entries())
-        
-        newData.forEach( (elem) => { 
-           tempMap.set(elem.id, elem)
-        })
-         
-         let newPositions = [...tempMap.values()].reduce((acc, cv) => acc.concat(cv.requiredPosition),[])
-         let setPos = new Set(newPositions)
-         if (setPos.size !== newPositions.length) {
-            throw new Error(`Position conflict with new data`)
-            return false
-         }
-        
-        newData.forEach( (elem) => {
-            this.rowData.set(elem.id, elem)
-        })
-        
-        return true
-    }
- 
+
     insertRowSort() {
                
         let frag = document.createDocumentFragment()
@@ -148,7 +119,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 let cols = [...row.querySelectorAll('col-sort')]
                 this.headerData.forEach( (label, id) => {
                     let col = cols.shift()
-                    col.dataset.display = elem[id]  || ''
+                    col.dataset.display = elem[id] || ''
                     col.removeAttribute('class');
                     col.classList.add(id)
                 })
@@ -158,137 +129,74 @@ window.customElements.define('auto-sort', class extends HTMLElement {
 
     async setItemData(val) {
      
-        try {
-            this.validatePositions(val)
-        } catch(e) {
-            return
-        }
+        let newData = JSON.parse(val)       
+        newData.forEach( (elem) => {
+            this.rowData.set(elem.id, elem)
+        })
          
+        await this.updateRows()
         this.insertRowSort()
-        console.log('inserts')
         this.updateCols()
-        console.log('updates')
         
         this.rowData.forEach( (elem) => {
             const item = this.querySelector(`#row-${elem.id}`)
             if ( item ) {
                 item.dataset.requiredPosition = elem.requiredPosition
-            } 
+            }
         })
 
-        if (null === this.timer){
-            this.timer = requestAnimationFrame(this.renderBind)
-        }
+       this.render()
+        
     }
 
     async render() {
 
         this.rows = [...this.querySelectorAll('row-sort')]
-        const positions = this.rows.reduce((acc, row) => acc.concat(~~row.dataset.requiredPosition), [])
-        const correctPositions = positions.slice().sort()        
-        const index = positions.findIndex( (slot,i) => slot !== correctPositions[i] )  
+        const positions = this.rows.reduce((acc, row) => acc.set(row.id, ~~row.dataset.requiredPosition), new Map())
+        const correctPositions = Array.from(positions).slice().sort((a, b)=> a[1] - b[1])
         
+        const promises = correctPositions.map(this.moveTaskElem.bind(this))
+        await Promise.all(promises)
         
-        console.log(positions, correctPositions, this.children)
-        
-        correctPositions.forEach( (pos, i) => {
-            
-            const el = this.rows.find( (elem) => ~~elem.dataset.requiredPosition === pos)
-            const el2 = this.children.item(i)
-            
-            
-            //targetElement.insertAdjacentElement(position, element);
-            
-            const from = el.getBoundingClientRect()
-            const to = el2.getBoundingClientRect()
-            const animDelta = (to.bottom - from.top)
-            
-            console.log(el !== el2)
-            if ( el !== el2) {
-                el.dataset.ypos = animDelta
-                
-                console.log('switched', pos, el2.dataset.requiredPosition)
-                
-                el2.insertAdjacentElement('afterend', el);
-                    el.dataset.ypos = 0
-                
-                const complete = (e) => {
-                    
-                     el.removeEventListener('transitionend', complete)
-                    
-                   
-                  }
-                  
-                  el.addEventListener('transitionend', complete)
-                
-               
-                
-            }
-            
-            
-        })
         this.rows = [...this.querySelectorAll('row-sort')]
-        console.log(this.rows.reduce((acc, row) => acc.concat(~~row.dataset.requiredPosition), []))
-       
-       
-       await this.updateRowsBind()
-            this.resetRows()
-        if ( index > -1) {
-           //const changeto = correctPositions.findIndex( (slot,i) => slot === positions[index] )
-           //await this.moveTaskElem(index, changeto)
-           //this.timer = requestAnimationFrame(this.renderBind)
-        } else {
-            this.timer = null
-            
-        }
-
+        
+        this.resetRows()
     }
 
-    moveTaskElem(position, newPos) {
+    moveTaskElem(arr, i) {
+        const [id, pos] = arr
+    
         return  new Promise((resolve, reject) => {
-            const taskElems = [...this.querySelectorAll('row-sort')]
-            let el = taskElems[position]
-            if (!el) resolve(false)
-            let el2 = taskElems[newPos]
-            if (!el2) resolve(false)
-
-            const from = el.getBoundingClientRect()
-            const to = el2.getBoundingClientRect()
-            const animDelta = (to.top - from.top)
-
-            const complete = (e) => {
-              if ( el && el2) {
-                this.insertBefore(el2, el)
-                el.dataset.ypos = 0
-                el2.dataset.ypos = 0
-              }
-              if (el) {
-                el.removeEventListener('transitionend', complete)
-              }
-              resolve(true);
-            }
-          
-            el.addEventListener('transitionend', complete)
-            el.dataset.ypos = animDelta
-            el2.dataset.ypos = -animDelta
+            const el = this.children.namedItem(id)
+            const el2 = this.children.item(i)
+            
+            if ( el && el2 && el !== el2) {
+                const from = el.getBoundingClientRect()
+                const to = el2.getBoundingClientRect()
+                const animDelta = (to.bottom - from.top)
+                
+                const complete = (e) => {   
+                    el.dataset.ypos = animDelta
+                    el.removeEventListener('transitionend', complete)
+                  }
+                el2.insertAdjacentElement('afterend', el)
+                el.addEventListener('transitionend', complete)
+                
+                
+            } 
+            resolve(true)
       })
     }
     
-    async removeRow(id) {        
-        return  new Promise((resolve, reject) => {
+    async removeRow(id) {
+        return  new Promise((resolve, reject) => { 
             this.rowData.delete(id)
-            const row = this.querySelector(`#row-${id}`)
+            const row = this.children.namedItem(`row-${id}`)
             if ( row ) {
                 row.classList.add('row-sort-exit-animate')
-                row.addEventListener("transitionend", (e) => {
-                    row.remove()
-                    
-                })
-                
-                resolve(true)
-            } else {
-                resolve(true)
-            }
+                row.remove()
+            } 
+            resolve(true)
         })
     }
 
