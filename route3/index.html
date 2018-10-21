@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <link rel="stylesheet" type="text/css" href="auto-sort.css" /> -->
+    </head>
+    <body>
+        
+        <route-display></route-display>
+        
+        <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
+        <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
+        <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
+        
+        <script type="module" src="index.js"></script>
+        
+        <script type="module" defer>
+            
+            import routerService from './router.service.js';
+            
+            
+            const one = (req, next) => {
+                console.log('one', req)
+                req.test = 'cool'
+                next()
+            }
+            
+            const two = (req, next) => {
+                console.log('two', req)
+                req.works = 'wow'
+                req.load('will this display')
+                next()
+            }
+            
+            const three = (req, next) => {
+                console.log('three', req)
+                next()
+            }
+            
+            routerService
+              .setPath('test/test', one, two, three)
+              .setPath('?page=1', three, one, two )
+            
+            
+            window.addEventListener('popstate', (e) => {
+                console.log(e)
+            }) 
+            
+           document.addEventListener('DOMContentLoaded', ()=>{                
+                 
+            })
+                     
+            setTimeout(() => {
+              
+            },1000)
+            
+
+            </script>
+        
+    </body>
+</html>
