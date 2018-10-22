@@ -1,0 +1,14 @@
+{
+  "name": "cedemo",
+  "description": "Front End Custom Elements",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint route-link.element.js"
+    },
+  "devDependencies": {
+    "eslint": "^5.7.0",
+    "webpack": "^4.17.1"
+  }
+}
+

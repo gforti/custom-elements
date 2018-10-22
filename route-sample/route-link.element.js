@@ -29,7 +29,7 @@ window.customElements.define('route-link', class extends HTMLElement {
         }        
     }    
     
-    activateRoute(e) {
+    activateRoute() {
         document.title = this.dataset.title
         window.history.replaceState({route: this.dataset.route}, this.dataset.title, `${this._homePath}${this.dataset.route}`) 
         window.dispatchEvent(new CustomEvent('route-clicked', { detail: this.dataset.route }))
