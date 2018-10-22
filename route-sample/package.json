@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint route-link.element.js"
+    "lint": "./node_modules/.bin/eslint --ext .js ./"
     },
   "devDependencies": {
     "eslint": "^5.7.0",

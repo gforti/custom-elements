@@ -9,10 +9,7 @@
         "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
+        "indent": [0, 2],
         "quotes": [
             "error",
             "single"
