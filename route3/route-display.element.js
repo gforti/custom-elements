@@ -10,7 +10,8 @@ window.customElements.define('route-display', class extends HTMLElement {
     
     attributeChangedCallback(attr, oldValue, newValue) {
         if ( oldValue !== newValue) {
-            this.innerHTML = this.dataset.content
+            const doc = new DOMParser().parseFromString(this.dataset.content, "text/html")
+            this.innerHTML = doc.body.innerHTML.toString()
         }
     }
 
