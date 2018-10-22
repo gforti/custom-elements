@@ -12,7 +12,7 @@ files.forEach( (file) => {
     const contents = fs.readFileSync( path.resolve(DIR, file), 'utf8');
     
     html += `templateCache.set('${path.parse(file).name}', \`${escapeHTMLConent(contents)}\`);\n`
-
+    
 })
 
 html += 'export default templateCache'
@@ -20,6 +20,8 @@ html += 'export default templateCache'
 function escapeHTMLConent(html) {
     return html.split("\n").join("").trim().replace(/`/gi, '\\`')
 }
+
+
 
 fs.writeFile("templateCache.js", html, (err) => {
     if(err) {

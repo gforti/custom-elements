@@ -1,0 +1,97 @@
+auto-sort {
+color: #52545b;
+font-family: sans-serif;
+font-size: 0.8rem;
+}
+
+col-sort {
+flex: 1;
+padding: .5rem;
+} 
+
+
+auto-sort row-sort:nth-child(odd) {
+background-color: #f2f2f2;
+}
+
+auto-sort row-sort:nth-child(even) {
+background-color:#fff;
+}
+
+
+
+
+row-sort {
+    display: flex;  
+    padding: .4rem 0;
+}
+
+auto-sort #header {
+    display: flex; 
+    background-color: #ebf3ff;
+    color: #4b96ff;
+    font-weight: 600;
+
+}
+auto-sort #header col-sort {
+    border-right: 1px solid #d9d9d9;
+}
+
+auto-sort #header col-sort:last-child {
+   border-right-width: 0;
+}
+
+
+[data-col="temp"] {
+    color: #4cdab6;
+}
+
+.row-sort-exit-transition {
+    transition: opacity 0.2s;
+    opacity: 0;
+}
+.row-sort-animate {
+   animation-duration: 0.4s;
+   animation-name: fade; 
+}
+.row-sort-new-animate {
+    animation-duration: 0.2s;
+    animation-name: slide;                    
+}
+
+.col-sort-animate {
+   animation-duration: 0.6s;
+   animation-name: color; 
+}
+  @keyframes slide {
+    from {
+      opacity: 0.2;                  
+      margin-left:-100vw;
+      margin-right:100vw;
+
+    }
+    to {
+      opacity: 1;
+      margin-left: 0vw;
+      margin-right: 0vw;
+    }
+  }
+
+
+   @keyframes fade {
+    from {
+      opacity: 0.2;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes color {
+    from {
+      background-color: #357bfe;
+    }
+    to {
+      background-color: transparent;
+    }
+  }
