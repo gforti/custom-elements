@@ -14,5 +14,11 @@ window.customElements.define('route-display', class extends HTMLElement {
             this.innerHTML = doc.body.innerHTML.toString()
         }
     }
+    
+    escapeHTML(html) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(html));
+        return div.innerHTML;
+    }
 
 })

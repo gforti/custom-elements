@@ -22,26 +22,32 @@
             
             
             const one = (req, next) => {
-                console.log('one', req)
+                console.log('one', req, req.search.get('page'))
                 req.test = 'cool'
                 next()
             }
             
             const two = (req, next) => {
-                console.log('two', req)
+                console.log('two', req, req.search.get('page'))
                 req.works = 'wow'
-                req.load('will this display')
+                req.load('test')
                 next()
             }
             
             const three = (req, next) => {
-                console.log('three', req)
+                console.log('three', req, req.search.get('page'))
+                next()
+            }
+            
+            const four = (req, next) => {
+                console.log('four', req, req.search.get('page'))
+                req.load('test2')
                 next()
             }
             
             routerService
               .setPath('test/test', one, two, three)
-              .setPath('?page=1', three, one, two )
+              .setPath('?page=1', three, one, four )
             
                        
             

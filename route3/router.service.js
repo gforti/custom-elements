@@ -1,3 +1,5 @@
+import templateCache from './templateCache.js'
+
 class RouterService {
 
     constructor() { 
@@ -22,7 +24,7 @@ class RouterService {
     historyChange(e) {
                 
         let cb = this.getPath(e.detail) 
-        let req = {load: this.load.bind(this)}
+        let req = {load: this.load.bind(this), search: new URLSearchParams(window.location.search)}
         const run = (callbacks) => {            
             if ( Array.isArray(callbacks) && callbacks.length ) {              
                 const element = callbacks.shift()                
@@ -58,7 +60,7 @@ class RouterService {
  
     load(content) {
          if (document.body.contains(this.routeDisplay)) {
-             this.routeDisplay.dataset.content = content
+             this.routeDisplay.dataset.content = templateCache.get(content)
          }
     }
 
