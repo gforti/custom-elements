@@ -5,14 +5,115 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="auto-sort/auto-sort.css" />
+        
+        <style>
+            
+            html, body {
+                height: 100%;
+                width: 100%;
+                min-width: 690px;
+                margin: 0;
+                padding: 0;
+                font-size: 0.94em;
+                 background-color: #ddd;
+            }
+            header {
+                
+               
+            }
+            
+            header section {
+                height: 50px;
+                background-color: #ca001a;
+                color: #fff;
+                position: relative;
+            }
+            
+            nav {
+                display: flex;
+                background-color: #fff;                
+                box-shadow: 0px 1px 1px 1px rgba(160, 160, 160, 0.34);
+
+            }
+            
+            aside {
+                
+                top: 0;
+                left: 0;
+                width: 20em;
+                height: 100%;
+                transform: translateX(-100%);
+                position: fixed;
+                padding: .5em 1em;
+                transition: transform .3s;
+
+            }
+            section.main {
+                height: calc(100% - 165px);
+                overflow: auto;
+                padding: 2rem;
+               
+            }
+            route-display {
+                margin: 0 auto;
+                width: calc(100% - 200px);
+                height: 100%;
+                height: 100%;
+                    
+            }
+            
+            footer {
+                background-color: #fff;
+                bottom: 0;
+                position: absolute;
+                height: 60px;
+                box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.36);             
+                z-index: 2;
+                display: flex;
+                width: 100%;
+            }
+            
+            route-link {
+                padding: 20px;
+                
+                 display: flex;
+                
+                justify-content: center;
+                cursor: pointer;
+            }
+            
+        </style>
+        
     </head>
     <body>
         
-        <route-display></route-display>
+        <header>
+            <section></section>
+            <nav>
+                <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
+                <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
+                <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
+            </nav>
+            
+        </header>
         
-        <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
-        <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
-        <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
+        
+        
+        
+        <aside></aside>
+        
+        <section class="main">
+        <route-display></route-display>
+        </section>
+        
+        
+        
+        
+        <footer>
+            
+        </footer>
+        
+        
         
         <script type="module" src="index.js"></script>
         
