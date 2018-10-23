@@ -70,6 +70,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                     const col = document.createElement('col-sort')
                     col.dataset.display = elem[id] || ''
                     col.dataset.col = id
+                    col.dataset.colLabel = label
                     rowSort.appendChild(col)
                 })
                 rowSort.setAttribute('id', `row-${elem.id}`)
@@ -117,6 +118,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                     if ( col ) {
                         col.dataset.display = elem[id] || ''
                         col.dataset.col = id
+                        col.dataset.colLabel = label
                     }
                 })
             } 

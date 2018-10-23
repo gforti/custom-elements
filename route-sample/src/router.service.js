@@ -1,4 +1,4 @@
-import templateCache from './templateCache.js'
+import templateCache from './templates/templateCache.js'
 
 class RouterService {
 

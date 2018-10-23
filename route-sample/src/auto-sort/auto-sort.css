@@ -95,3 +95,50 @@ auto-sort #header col-sort:last-child {
       background-color: transparent;
     }
   }
+
+  
+  
+  
+  
+@media screen and (max-width: 640px) {
+  row-sort {
+    display: block;
+    padding: 0; 
+    border-bottom: 1px dotted #0a0a0a;
+  }
+  
+  row-sort:last-child {
+   border-bottom-width: 0;
+  }
+
+  auto-sort div#header {
+    position: absolute;
+    top: -9999em;
+    left: -9999em;
+  }
+  row-sort col-sort {
+    border: 1px solid #0a0a0a;
+    display: block;
+    padding: .2rem;
+  }
+  row-sort col-sort + col-sort {
+    margin-top: 0rem;
+  }
+  row-sort col-sort {
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;    
+    padding-left: 50%;
+  }
+  row-sort col-sort:before {
+    content: attr(data-col-label);
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1;
+    margin-left: -100%;
+    width: 100%;
+    z-index: 1;
+  }
+  
+}

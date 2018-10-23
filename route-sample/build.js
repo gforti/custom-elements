@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const DIR = 'templates'
+const DIR = 'src/templates'
 
 let dirCont = fs.readdirSync( DIR )
 let files = dirCont.filter( ( file ) => /.*\.(htm?|html)/ig.test(file))
@@ -23,7 +23,7 @@ function escapeHTMLConent(html) {
 
 
 
-fs.writeFile("templateCache.js", html, (err) => {
+fs.writeFile(path.resolve(DIR, 'templateCache.js'), html, (err) => {
     if(err) {
         return console.log(err);
     }
