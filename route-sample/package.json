@@ -1,58 +1,48 @@
 {
-  "name": "cedemo",
-  "description": "Front End Custom Elements",
-  "version": "0.0.1",
-  "license": "MIT",
-  "scripts": {
-    "lint:js": "eslint --ext .js ./",
-    "lint:css": "stylelint **/*.css",
-    "lint": "rpm run lint:js && rpm run lint:css"
-  },
-  "eslintIgnore": ["build.js"],
-  "eslintConfig": {
-         "env": {
-        "browser": true,
-        "es6": true
+    "name": "cedemo",
+    "description": "Front End Custom Elements",
+    "version": "0.0.1",
+    "license": "MIT",
+    "scripts": {
+        "lint:js": "eslint --ext .js ./",
+        "lint:css": "stylelint **/*.css",
+        "lint": "rpm run lint:js && rpm run lint:css"
     },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },    
-    "rules": {
-        "indent": [0, 2],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "never"
-        ]
-    }
-  },
-  "devDependencies": {
-    "eslint": "^5.7.0",
-    "stylelint": "^9.6.0",
-    "webpack": "^4.17.1"
-  },
-  "stylelint": {
-    "rules": {      
-      "block-no-empty": null,
-        "color-no-invalid-hex": true,
-        "comment-empty-line-before": [ "always", {
-          "ignore": ["stylelint-commands", "after-comment"]
-        } ],
-        "declaration-colon-space-after": "always",
-        "indentation": ["tab", {
-          "except": ["value"]
-        }],
-        "max-empty-lines": 2,
-        "rule-empty-line-before": [ "always", {
-          "except": ["first-nested"],
-          "ignore": ["after-comment"]
-        } ],
-        "unit-whitelist": ["em", "rem", "%", "s"]
+    "eslintIgnore": [
+        "build.js"
+    ],
+    "eslintConfig": {
+        "env": {
+            "browser": true,
+            "es6": true
+        },
+        "extends": "eslint:recommended",
+        "parserOptions": {
+            "ecmaVersion": 2018,
+            "sourceType": "module"
+        },
+        "rules": {
+            "indent": [
+                0,
+                2
+            ],
+            "quotes": [
+                "error",
+                "single"
+            ],
+            "semi": [
+                "error",
+                "never"
+            ]
         }
-  }
+    },
+    "stylelint" : {
+        "extends": "stylelint-config-standard"
+    },
+    "devDependencies": {
+        "eslint": "^5.7.0",
+        "stylelint": "^9.6.0",
+        "stylelint-config-standard": "^18.2.0",
+        "webpack": "^4.17.1"
+    }
 }

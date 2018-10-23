@@ -1,9 +1,9 @@
 window.customElements.define('col-sort', class extends HTMLElement {
 
-    constructor() {
-        super()
-        this.removeClassBind = this.removeClass.bind(this)
-    }
+  constructor() {
+    super()
+    this.removeClassBind = this.removeClass.bind(this)
+  }
     
     static get observedAttributes() {
       return ['data-display']
