@@ -12,17 +12,15 @@
                 margin: 0;
                 padding: 0;
                 font-size: 0.94em;
-                background-color: #ddd;
-                 
+                background-color: #ddd;                 
             }
             
             body {
-                min-height: 100%;
+                min-height: 100vh;
                 display: grid;
-                grid-template-rows: 1fr auto;
+                grid-template-rows: auto 1fr auto;
             }
-            header {
-                
+            header {                
                width: 100%;
             }
             
@@ -37,11 +35,9 @@
                 display: flex;
                 background-color: #fff;                
                 box-shadow: 0px 1px 1px 1px rgba(160, 160, 160, 0.34);
-
             }
             
-            aside {
-                
+            aside {                
                 top: 0;
                 left: 0;
                 width: 20em;
@@ -50,10 +46,8 @@
                 position: fixed;
                 padding: .5em 1em;
                 transition: transform .3s;
-
             }
             section.main {
-                min-height: 100%;
                 overflow: auto;
                 padding: 2rem;
                
@@ -65,22 +59,16 @@
             }
             
             footer {
-                background-color: #fff;
-                
+                background-color: #fff;                
                 height: 60px;
                 box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.36);             
-             
                 display: flex;
                 width: 100%;
-                
-               
             }
             
             route-link {
-                padding: 20px;
-                
-                 display: flex;
-                
+                padding: 20px;                
+                display: flex;                
                 justify-content: center;
                 cursor: pointer;
             }
@@ -89,33 +77,27 @@
         
     </head>
     <body>
-        
-        <header>
-            <section></section>
-            <nav>
-                <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
-                <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
-                <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
-            </nav>
-            
-        </header>
-        
-        
-        
-        
-        <aside></aside>
-        
-        <section class="main">
-        <route-display></route-display>
-        </section>
-        
-        
-        
-        
-        <footer>
-            
-        </footer>
-        
+       
+            <header>
+                <section></section>
+                <nav>
+                    <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
+                    <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
+                    <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
+                </nav>
+
+            </header>
+
+            <aside></aside>
+
+            <section class="main">
+                <route-display></route-display>
+            </section>
+
+
+            <footer>
+
+            </footer>
         
         
         <script type="module" src="index.js"></script>
