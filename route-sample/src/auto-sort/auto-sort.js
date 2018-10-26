@@ -1,3 +1,6 @@
+import './col-sort.js'
+import './row-sort.js'
+
 window.customElements.define('auto-sort', class extends HTMLElement {
 
     constructor() {

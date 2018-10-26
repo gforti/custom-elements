@@ -1,221 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title><%= htmlWebpackPlugin.options.title %></title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="auto-sort/auto-sort.css" />
-        
-        <style>
-            
-            html, body {
-                margin: 0;
-                padding: 0;
-                font-size: 0.94em;
-                background-color: #ddd;                 
-            }
-            
-            body {
-                min-height: 100vh;
-                display: grid;
-                grid-template-rows: auto 1fr auto;
-            }
-            header {                
-               width: 100%;
-            }
-            
-            header section {
-                height: 50px;
-                background-color: #ca001a;
-                color: #fff;
-                position: relative;
-            }
-            
-            nav {
-                display: flex;
-                background-color: #fff;                
-                box-shadow: 0px 1px 1px 1px rgba(160, 160, 160, 0.34);
-            }
-            
-            aside {                
-                top: 0;
-                left: 0;
-                width: 20em;
-                height: 100%;
-                transform: translateX(-100%);
-                position: fixed;
-                padding: .5em 1em;
-                transition: transform .3s;
-            }
-            section.main {
-                overflow: auto;
-                padding: 2rem;
-               
-            }
-            route-display {
-                margin: 0 auto;                
-                height: 100%;
-                height: 100%;                    
-            }
-            
-            footer {
-                background-color: #fff;                
-                height: 60px;
-                box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.36);             
-                display: flex;
-                width: 100%;
-            }
-            
-            route-link {
-                padding: 20px;                
-                display: flex;                
-                justify-content: center;
-                cursor: pointer;
-            }
-            
-        </style>
-        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">          
     </head>
-    <body>
-       
-            <header>
-                <section></section>
-                <nav>
-                    <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
-                    <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
-                    <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
-                </nav>
+    <body>       
+        <header>
+            <section></section>
+            <nav>
+                <route-link data-route="test/test" data-title="Custom Page 1">testing</route-link>
+                <route-link data-route="?page=1" data-title="Custom Page 2">testing1</route-link>
+                <route-link data-route="test/s2" data-title="Custom Page 3">testing2</route-link>
+            </nav>
+        </header>
 
-            </header>
+        <aside></aside>
 
-            <aside></aside>
+        <section class="main">
+            <route-display></route-display>
+        </section>
 
-            <section class="main">
-                <route-display></route-display>
-            </section>
+        <footer></footer>
 
-
-            <footer>
-
-            </footer>
-        
-        
-        <script type="module" src="index.js"></script>
-        
-        <script type="module" defer>
-            
-            import routerService from './router.service.js';
-            
-            
-            const headers = [
-                { id: 'deliveryId', label: 'Delivery ID' },
-                { id: 'date', label: 'Date' },                
-                { id: 'carrier', label: 'Carrier' },
-                { id: 'status', label: 'Status' },
-                { id: 'eta', label: 'ETA' },
-                { id: 'temp', label: 'Temp Conditions' },
-                { id: 'pallets', label: 'Pallets' },
-                { id: 'site', label: 'Site' },
-            ]
-            
-            const taskData = [
-                {
-                  id: 1,
-                  deliveryId: 1,
-                  date: '10/10/2018',
-                  carrier: 'UPS',
-                  status: 'On Time',
-                  eta: '90 hours',
-                  temp: '60°',
-                  pallets: 10,
-                  site: 'London',
-                  requiredPosition: 1
-                },
-                {
-                  id: 2,
-                  deliveryId: 2,
-                  date: '10/10/2018',
-                  carrier: 'UPS',
-                  status: 'On Time',
-                  eta: '90 hours',
-                  temp: '60°',
-                  pallets: 10,
-                  site: 'Moscow',
-                  requiredPosition: 0
-                },
-                {
-                  id: 3,
-                  deliveryId: 3,
-                  date: '10/10/2018',
-                  carrier: 'UPS',
-                  status: 'On Time',
-                  eta: '90 hours',
-                  temp: '60°',
-                  pallets: 10,
-                  site: 'Madrid',
-                  requiredPosition: 3
-                },
-                {
-                  id: 4,
-                  deliveryId: 4,
-                  date: '10/10/2018',
-                  carrier: 'UPS',
-                  status: 'On Time',
-                  eta: '90 hours',
-                  temp: '60°',
-                  pallets: 10,
-                  site: 'Canberra',
-                  requiredPosition: 4
-                }
-              ];
-            
-            const one = (req, next) => {
-                console.log('one', req, req.search.get('page'))
-                req.test = 'cool'
-                next()
-            }
-            
-            const two = (req, next) => {
-                console.log('two', req, req.search.get('page'))
-                req.works = 'wow'
-                req.load('test')
-                next()
-            }
-            
-            const three = (req, next) => {
-                console.log('three', req, req.search.get('page'))
-                next()
-            }
-            
-            const four = (req, next) => {
-                console.log('four', req, req.search.get('page'))
-                req.load('test2')
-                next()
-            }
-            
-            
-            const five = (req, next) => {
-                document.querySelector('auto-sort').dataset.headers = JSON.stringify(headers)
-                document.querySelector('auto-sort').dataset.items = JSON.stringify(taskData)
-               
-                next()
-            }
-            
-            routerService
-              .setPath('test/test', one, two, three)
-              .setPath('?page=1', three, one, four, five )
-            
-               
-           document.addEventListener('DOMContentLoaded', ()=>{                
-                 
-            })
-                     
-            setTimeout(() => {
-              
-            },1000)
-            
-
-            </script>
-        
     </body>
 </html>

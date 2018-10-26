@@ -9,21 +9,30 @@ class RouterService {
         }
         this.instance = this
         this.paths = new Map()
-        this._homePath = window.location.pathname.indexOf('.') > -1 ?
+        this._basePath = window.location.pathname.indexOf('.') > -1 ?
                          window.decodeURI(window.location.pathname).split('/').slice(0, -1).join('/') :
                          window.decodeURI(window.location.pathname)
-        this._homePath = this._homePath.endsWith('/') ? this._homePath : this._homePath + '/'
+        this._basePath = this._basePath.endsWith('/') ? this._basePath : this._basePath + '/'
+        if ( this._basePath === '/') {
+            this._basePath = ''
+        }
         
         this.historyChangeBind = this.historyChange.bind(this)
         window.addEventListener('route-clicked', this.historyChangeBind)
-        
+        window.addEventListener('popstate', this.historyChangeBind)        
         this.routeDisplay = document.querySelector('route-display')
-
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', this.goto.bind(this, '/'))
+        } else {
+            this.goto('/')
+        }
+        
     }
 
     historyChange(e) {
-                
-        let cb = this.getPath(e.detail) 
+        const route =   e ? e.detail || e.state || '/' : '/' 
+        let cb = this.getPath(route) 
         let req = {load: this.load.bind(this), search: new URLSearchParams(window.location.search)}
         const run = (callbacks) => {            
             if ( Array.isArray(callbacks) && callbacks.length ) {              
@@ -40,12 +49,14 @@ class RouterService {
         }
     }
 
-    get homePath() {
-        return this._homePath // `${window.location.origin}/`
+    get basePath() {
+        return this._basePath // `${window.location.origin}/`
     }
 
     goto(path, title='') {
-        window.history.pushState({route: path}, title, `${this.homePath}${path}`)
+        console.log(`${this.basePath}${path}`)
+        window.history.pushState( path, title, `${this.basePath}${path}`)
+        window.dispatchEvent(new CustomEvent('route-clicked', { detail: path }))
         return this
     }  
  
@@ -62,8 +73,8 @@ class RouterService {
          if (document.body.contains(this.routeDisplay)) {
              this.routeDisplay.dataset.content = templateCache.get(content)
          }
+         return this
     }
-
 }
 
 export default new RouterService()
