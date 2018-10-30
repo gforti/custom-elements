@@ -3,10 +3,7 @@ window.customElements.define('route-link', class extends HTMLElement {
     constructor() {
         super()
         this.activateRouteBind = this.activateRoute.bind(this)
-        this._basePath = window.location.pathname.indexOf('.') > -1 ?
-                         window.decodeURI(window.location.pathname).split('/').slice(0, -1).join('/') :
-                         window.decodeURI(window.location.pathname)
-        this._basePath = this._basePath.endsWith('/') ? this._basePath : this._basePath + '/'
+        this._basePath = `${window.location.origin}/`
     }
     
     static get observedAttributes() {

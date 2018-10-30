@@ -78,7 +78,8 @@ import routerService from './router.service.js';
         next()
     }
 
-    const three = (req, next) => {        
+    const three = (req, next) => {  
+        console.log(...req.search.values())
         next()
     }
 

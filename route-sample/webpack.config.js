@@ -1,8 +1,12 @@
-
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const package = require('./package.json');
+// const package = require('./package.json');
+
+
+function clearSlashes(base)  {
+    return base.toString().replace(/\/$/, '').replace(/^\//, '');
+}
 
 module.exports = {
    entry: {
@@ -19,14 +23,8 @@ module.exports = {
       port: 9000,
       historyApiFallback: {
         rewrites: [
-            {from: /.*\.html/, to: '/index.html'},
-            {
-              from: /.*$/,
-              to: function(context) {
-                  console.log('path catch?', context.parsedUrl.pathname)
-                return '/' //?goto=' + context.parsedUrl.pathname;
-              }
-            }
+            {from: /.*\.html/, to: '/'},
+            {from: /^[\w\/]+$/, to: '/'},
         ]
       },
       open: true,
