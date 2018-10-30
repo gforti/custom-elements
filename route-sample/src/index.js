@@ -1,10 +1,10 @@
-import './index.css';
+import './index.css'
 
 import './route-link.element.js'
 import './route-display.element.js'
 import './auto-sort/index.js'
-import routerService from './router.service.js';
-    
+import routerService from './router.service.js'
+
     const headers = [
         { id: 'deliveryId', label: 'Delivery ID' },
         { id: 'date', label: 'Date' },                
@@ -65,7 +65,7 @@ import routerService from './router.service.js';
           site: 'Canberra',
           requiredPosition: 4
         }
-      ];
+    ]
 
     const one = (req, next) => {
         req.test = 'cool'
@@ -79,7 +79,7 @@ import routerService from './router.service.js';
     }
 
     const three = (req, next) => {  
-        console.log(...req.search.values())
+        
         next()
     }
 
@@ -96,11 +96,16 @@ import routerService from './router.service.js';
     }
     
     const start = (req, next) => {
-        req.load('default')
+        if (req.search.get('page') === '1') {
+            req.load('test2')
+            five(req, next)
+        } else {
+            req.load('default')
+        }        
     }
 
     routerService
       .setPath('/', start)
       .setPath('test/test', one, two, three)
-      .setPath('?page=1', three, one, four, five )
+      .setPath('test/s2', three, one, four, five )
 

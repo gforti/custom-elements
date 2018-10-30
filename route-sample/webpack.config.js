@@ -42,7 +42,7 @@ module.exports = {
        new HtmlWebpackPlugin({
          hash: true,
          title: '',
-         template: './src/index.html',
+         template: './index.html',
          filename: './index.html',
          chunks: ['vendor', 'index'],
        })

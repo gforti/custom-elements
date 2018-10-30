@@ -30,13 +30,13 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         const header = this.querySelector('#header')
         if (!header) {
             const row = document.createElement('div')
-            row.setAttribute('id', `header`)
+            row.setAttribute('id', 'header')
             this.prepend(row)
         }
     }
     
     async updateRows() {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             const newData = JSON.parse(this.dataset.items) 
                        
             const diffMap = new Map()
@@ -55,7 +55,7 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
 
     async insertRowSort() {
-        return new Promise(async (resolve, reject) => {            
+        return new Promise(async (resolve) => {            
             const promises = [...this.rowData.values()].map(this.insertNewRow.bind(this))
             await Promise.all(promises)
             resolve(true)           
@@ -63,8 +63,8 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
     
     
-    insertNewRow(elem){
-         return  new Promise((resolve, reject) => { 
+    insertNewRow(elem) {
+         return  new Promise((resolve) => { 
 
             const row = this.children.namedItem(`row-${elem.id}`)
             if ( !row ) {
@@ -79,14 +79,14 @@ window.customElements.define('auto-sort', class extends HTMLElement {
                 rowSort.setAttribute('id', `row-${elem.id}`)
                 rowSort.dataset.requiredPosition = elem.requiredPosition
 
-                const complete = (e) => {
+                const complete = () => {
                     rowSort.removeEventListener('animationend', complete)                        
-                    resolve(true);
+                    resolve(true)
                 }                    
                 rowSort.addEventListener('animationend', complete)
                 this.appendChild(rowSort)
             } else {
-                resolve(true);
+                resolve(true)
             }
             
         })
@@ -165,7 +165,6 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         await this.updateRows()
         await this.insertRowSort()
         
-        
         this.rowData.forEach( (elem) => {
             const item = this.querySelector(`#row-${elem.id}`)
             if ( item ) {
@@ -179,12 +178,12 @@ window.customElements.define('auto-sort', class extends HTMLElement {
         
         const promises = correctPositions.map(this.moveRowElem.bind(this))
         await Promise.all(promises)
-        this.updateCols();
+        this.updateCols()
     }
 
     moveRowElem(arr, i) {
-        const [id, pos] = arr    
-        return  new Promise((resolve, reject) => {
+        const [id] = arr    
+        return  new Promise((resolve) => {
             const el = this.children.namedItem(id)
             const el2 = this.children.item(i+1)
             if ( el && el2 && !el.isSameNode(el2)) {
@@ -195,11 +194,11 @@ window.customElements.define('auto-sort', class extends HTMLElement {
     }
     
     async removeRow(id) {
-        return  new Promise((resolve, reject) => { 
+        return  new Promise((resolve) => { 
             this.rowData.delete(id)
             const row = this.children.namedItem(`row-${id}`)
             if ( row ) {
-                row.addEventListener('transitionend', (e) => {
+                row.addEventListener('transitionend', () => {
                     row.remove()
                     resolve(true)
                 })

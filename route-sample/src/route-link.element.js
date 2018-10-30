@@ -18,19 +18,11 @@ window.customElements.define('route-link', class extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener('click', this.activateRouteBind)
     }
-        
 
-    attributeChangedCallback(attr, oldValue, newValue) {
-        if ( oldValue !== newValue) {
-                     
-        }        
-    }    
-    
     activateRoute() {
         document.title = this.dataset.title
         window.history.pushState(this.dataset.route, this.dataset.title, `${this._basePath}${this.dataset.route}`) 
         window.dispatchEvent(new CustomEvent('route-clicked', { detail: this.dataset.route }))
-    }
-        
+    }        
 
 })

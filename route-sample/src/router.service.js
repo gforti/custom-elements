@@ -1,10 +1,10 @@
-import templateCache from './templates/templateCache.js'
+import templateCache from './templateCache.js'
 
 class RouterService {
 
     constructor() { 
         
-        if(this.instance){
+        if(this.instance) {
             return this.instance
         }
         this.instance = this
@@ -26,7 +26,7 @@ class RouterService {
     }
 
     getCurrentPath() {
-        return decodeURI(window.location.pathname + window.location.search)
+        return decodeURI(window.location.pathname)
     }
     
     getRoute() {
@@ -37,8 +37,8 @@ class RouterService {
           .find(route => currentPath === route) || this.getCurrentPath()
     }
     
-    historyChange(e) {
-        const route = this.getRoute() //e ? e.detail || e.state || '/' : '/'        
+    historyChange() {
+        const route = this.getRoute()
         let cb = this.getPath(route) 
         let req = {load: this.load.bind(this), search: new URLSearchParams(window.location.search)}
         const run = (callbacks) => {            
@@ -57,7 +57,7 @@ class RouterService {
     }
 
     get basePath() {
-        return this._basePath // `${window.location.origin}/`
+        return this._basePath
     }
 
     goto(path, title='') {
@@ -67,11 +67,11 @@ class RouterService {
     } 
     
     toBase64(str) {
-        return window.btoa(unescape(encodeURIComponent(str)));
+        return window.btoa(unescape(encodeURIComponent(str)))
     }    
     
     fromBase64(str) {
-    return decodeURIComponent(escape(window.atob(str)));
+    return decodeURIComponent(escape(window.atob(str)))
 }
  
     setPath(path, ...callbacks) {

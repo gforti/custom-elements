@@ -1,3 +1,8 @@
+row-sort {
+    display: flex;
+    padding: 0.4rem 0;
+}
+
 auto-sort {
 color: #52545b;
 font-family: sans-serif;
@@ -6,33 +11,24 @@ font-size: 0.8rem;
 
 col-sort {
 flex: 1;
-padding: .5rem;
-} 
-
+padding: 0.5rem;
+}
 
 auto-sort row-sort:nth-child(odd) {
 background-color: #f2f2f2;
 }
 
 auto-sort row-sort:nth-child(even) {
-background-color:#fff;
-}
-
-
-
-
-row-sort {
-    display: flex;  
-    padding: .4rem 0;
+background-color: #fff;
 }
 
 auto-sort #header {
-    display: flex; 
+    display: flex;
     background-color: #ebf3ff;
     color: #4b96ff;
     font-weight: 600;
-
 }
+
 auto-sort #header col-sort {
     border-right: 1px solid #d9d9d9;
 }
@@ -40,7 +36,6 @@ auto-sort #header col-sort {
 auto-sort #header col-sort:last-child {
    border-right-width: 0;
 }
-
 
 [data-col="temp"] {
     color: #4cdab6;
@@ -50,38 +45,41 @@ auto-sort #header col-sort:last-child {
     transition: opacity 0.2s;
     opacity: 0;
 }
+
 .row-sort-animate {
    animation-duration: 0.4s;
-   animation-name: fade; 
+   animation-name: fade;
 }
+
 .row-sort-new-animate {
     animation-duration: 0.2s;
-    animation-name: slide;                    
+    animation-name: slide;
 }
 
 .col-sort-animate {
    animation-duration: 0.6s;
-   animation-name: color; 
+   animation-name: color;
 }
+
   @keyframes slide {
     from {
-      opacity: 0.2;                  
-      margin-left:-100vw;
-      margin-right:100vw;
-
+      opacity: 0.2;
+      margin-left: -100vw;
+      margin-right: 100vw;
     }
+
     to {
       opacity: 1;
-      margin-left: 0vw;
-      margin-right: 0vw;
+      margin-left: 0;
+      margin-right: 0;
     }
   }
-
 
    @keyframes fade {
     from {
       opacity: 0.2;
     }
+
     to {
       opacity: 1;
     }
@@ -91,22 +89,19 @@ auto-sort #header col-sort:last-child {
     from {
       background-color: #357bfe;
     }
+
     to {
       background-color: transparent;
     }
   }
 
-  
-  
-  
-  
 @media screen and (max-width: 640px) {
   row-sort {
     display: block;
-    padding: 0; 
+    padding: 0;
     border-bottom: 1px dotted #0a0a0a;
   }
-  
+
   row-sort:last-child {
    border-bottom-width: 0;
   }
@@ -116,22 +111,17 @@ auto-sort #header col-sort:last-child {
     top: -9999em;
     left: -9999em;
   }
+
   row-sort col-sort {
-    border: 1px solid #0a0a0a;
-    display: block;
-    padding: .2rem;
-  }
-  row-sort col-sort + col-sort {
-    margin-top: 0rem;
-  }
-  row-sort col-sort {
+    padding: 0.2rem;
     border: none;
     display: flex;
     justify-content: flex-start;
-    align-items: center;    
+    align-items: center;
     padding-left: 50%;
   }
-  row-sort col-sort:before {
+
+  row-sort col-sort::before {
     content: attr(data-col-label);
     display: inline-block;
     font-weight: bold;
@@ -140,5 +130,8 @@ auto-sort #header col-sort:last-child {
     width: 100%;
     z-index: 1;
   }
-  
+
+  row-sort col-sort + col-sort {
+    margin-top: 0;
+  }
 }

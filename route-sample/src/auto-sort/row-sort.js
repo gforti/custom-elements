@@ -19,11 +19,4 @@ window.customElements.define('row-sort', class extends HTMLElement {
       return ['data-required-position']
     }
 
-    attributeChangedCallback(attr, oldValue, newValue) {
-        if ( oldValue !== newValue) {
-            
-        }        
-    }
-    
-});
-
+})

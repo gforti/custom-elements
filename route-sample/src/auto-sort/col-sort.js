@@ -29,5 +29,4 @@ window.customElements.define('col-sort', class extends HTMLElement {
        this.classList.remove('col-sort-animate') 
     }
 
-});
-
+})
