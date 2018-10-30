@@ -8,9 +8,10 @@
         "lint:css": "stylelint ./src/**/*.css",
         "lint": "npm run lint:js && npm run lint:css",
         "build:cache": "node build.js",
-        "build": "npm run build:cache & webpack --mode production --config webpack.config.js",
+        "build:prod": "npm run build:cache & webpack --mode production --config webpack.config.js",
         "build:dev": "npm run build:cache && webpack --mode development --config webpack.config.js",
-        "start": "nodemon build.js & webpack-dev-server --mode development --config webpack.config.js"
+        "start": "nodemon build.js & webpack-dev-server --mode development --config webpack.config.js",
+        "live": ""
     },
     "nodemonConfig": {
         "watch": [
@@ -115,6 +116,7 @@
     },
     "devDependencies": {
         "clean-webpack-plugin": "^0.1.19",
+        "copy-webpack-plugin": "^4.5.4",
         "css-loader": "^1.0.0",
         "eslint": "^5.7.0",
         "html-webpack-plugin": "^3.2.0",

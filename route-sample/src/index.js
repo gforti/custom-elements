@@ -109,3 +109,58 @@ import routerService from './router.service.js'
       .setPath('test/test', one, two, three)
       .setPath('test/s2', three, one, four, five )
 
+
+
+const favicon = document.querySelector('#favicon').href
+
+document.addEventListener('visibilitychange', () => {
+    document.title = document.hidden ? 'Away' : 'Active'
+    if ( document.hidden )
+        document.querySelector('#favicon').href = favicon
+})
+
+
+setInterval(() => {
+    if ( document.hidden ) 
+        updateFavicon() 
+    else 
+        document.querySelector('#favicon').href = favicon
+}, 1000)
+
+
+
+function updateFavicon() {
+    const can = document.createElement('canvas')
+    can.width = '32'
+    can.height = '32'
+    let ctx = can.getContext('2d')
+    let img = document.createElement('img')
+    img.src = favicon
+    img.addEventListener('load', () => {
+        ctx.drawImage(img, 0, 0)
+        
+       
+        ctx.save();
+        ctx.beginPath();
+        /*
+         *  x                   The x-coordinate of the center of the circle
+         *  y                   The y-coordinate of the center of the circle
+         *  r                   The radius of the circle
+         *  sAngle              The starting angle, in radians (0 is at the 3 o'clock position of the arc's circle)
+         *  eAngle              The ending angle, in radians
+         *  counterclockwise	Optional. Specifies whether the drawing should be counterclockwise or clockwise. 
+         *                      False is default, and indicates clockwise, while true indicates counter-clockwise.
+         */
+        ctx.arc(15, 15, 10, 0, 2 * Math.PI, false); //x, y, radius, sAngle, eAngle, counterclockwise  
+        ctx.fillStyle = 'red';
+        ctx.fill();
+        
+        ctx.fillStyle = 'white';
+        ctx.font = "12pt Helvetica";
+        ctx.fillText('5', 10, 20); //x,y
+        ctx.restore();            
+        
+        document.querySelector('#favicon').href= can.toDataURL()
+    })
+    
+}
