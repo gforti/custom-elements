@@ -41,7 +41,8 @@ async function getFiles(dir) {
   const files = await Promise.all(subdirs.map(async (subdir) => {
     const res = resolve(dir, subdir);
     return (await statProms(res)).isDirectory() ? getFiles(res) : res
-  }));
-  return files.reduce((a, f) => a.concat(f), [])
+  }))
+  return files
+            .reduce((a, f) => a.concat(f), [])
             .filter((file) => /.*\.(htm?|html)/ig.test(file))
 }

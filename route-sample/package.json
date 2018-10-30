@@ -6,11 +6,20 @@
     "scripts": {
         "lint:js": "eslint --ext .js ./src",
         "lint:css": "stylelint ./src/**/*.css",
-        "lint": "rpm run lint:js && rpm run lint:css",
+        "lint": "npm run lint:js && npm run lint:css",
         "build:cache": "node build.js",
-        "build": "webpack --mode production --config webpack.config.js",
-        "build:dev": "webpack --mode development --config webpack.config.js",
-        "start": "webpack-dev-server --mode development --config webpack.config.js"
+        "build": "npm run build:cache & webpack --mode production --config webpack.config.js",
+        "build:dev": "npm run build:cache && webpack --mode development --config webpack.config.js",
+        "start": "nodemon build.js & webpack-dev-server --mode development --config webpack.config.js"
+    },
+    "nodemonConfig": {
+        "watch": [
+            "src/"
+        ],
+        "env": {
+            "NODE_ENV": "development"
+        },
+        "ext": "htm,html"
     },
     "eslintIgnore": [
         "build.js"
@@ -26,22 +35,64 @@
             "sourceType": "module"
         },
         "rules": {
-            "indent": [0, 2],
-            "quotes": ["error", "single"],
-            "semi": ["error", "never"],
+            "indent": [
+                0,
+                2
+            ],
+            "quotes": [
+                "error",
+                "single"
+            ],
+            "semi": [
+                "error",
+                "never"
+            ],
             "no-inline-comments": 2,
             "no-trailing-spaces": 0,
-            "no-multiple-empty-lines": [2, { "max": 2, "maxEOF": 1 }],
-            "id-blacklist": [0, "data", "err", "e", "cb", "callback", "item", "items"],
-            "func-style": [2, "declaration", { "allowArrowFunctions": true }],
+            "no-multiple-empty-lines": [
+                2,
+                {
+                    "max": 2,
+                    "maxEOF": 1
+                }
+            ],
+            "id-blacklist": [
+                0,
+                "data",
+                "err",
+                "e",
+                "cb",
+                "callback",
+                "item",
+                "items"
+            ],
+            "func-style": [
+                2,
+                "declaration",
+                {
+                    "allowArrowFunctions": true
+                }
+            ],
             "sort-keys": 0,
-            "space-in-parens": [0, "never"],
+            "space-in-parens": [
+                0,
+                "never"
+            ],
             "space-before-blocks": 2,
             "sort-vars": 2,
             "sort-imports": 2,
-            "quote-props": [2, "consistent-as-needed"],
+            "quote-props": [
+                2,
+                "consistent-as-needed"
+            ],
             "prefer-object-spread": 2,
-            "brace-style": [2, "1tbs", { "allowSingleLine": true }],
+            "brace-style": [
+                2,
+                "1tbs",
+                {
+                    "allowSingleLine": true
+                }
+            ],
             "camelcase": 2,
             "no-unneeded-ternary": 2
         }
@@ -50,8 +101,16 @@
         "extends": "stylelint-config-standard",
         "rules": {
             "indentation": null,
-            "selector-type-no-unknown" : [true, {"ignore": ["custom-elements", "default-namespace"]}],
-            "color-hex-case" : "lower"
+            "selector-type-no-unknown": [
+                true,
+                {
+                    "ignore": [
+                        "custom-elements",
+                        "default-namespace"
+                    ]
+                }
+            ],
+            "color-hex-case": "lower"
         }
     },
     "devDependencies": {
@@ -59,6 +118,7 @@
         "css-loader": "^1.0.0",
         "eslint": "^5.7.0",
         "html-webpack-plugin": "^3.2.0",
+        "nodemon": "^1.18.5",
         "style-loader": "^0.23.1",
         "stylelint": "^9.6.0",
         "stylelint-config-standard": "^18.2.0",

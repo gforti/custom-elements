@@ -9,6 +9,7 @@ function clearSlashes(base)  {
 }
 
 module.exports = {
+   watch:true,
    entry: {
     index: "./src/index.js",
     // vendor: Object.keys(package.dependencies)
