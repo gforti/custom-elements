@@ -1,4 +1,4 @@
-# Intelligence of Things Front-end Command-line Interface
+# Router
 
 ```sh
 $ npm install
@@ -102,18 +102,25 @@ RewriteRule . /index.html [L]
 ### Express Node.js
 
 ```js
-const history = require('connect-history-api-fallback')
 const express = require('express')
 const app = express()
-app.use(history({
-  verbose: true,
-  rewrites: [
-    { from: /.*\.html/, to: '/' },
-    { from: /^[\w\/]+$/, to: '/' },
-  ]
-}))
-app.use(express.static('.'))
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+const port = process.env.port || 7600
+const root = __dirname
+
+const fallback = (...args) => (req, res, next) => {
+  if ((req.method === 'GET' || req.method === 'HEAD') && req.accepts('html')) {
+    res.sendFile.call(res, ...args, error => error && next())
+  } else next()
+}
+
+app.use(express.static(root))
+app.use(fallback('index.html', { root }))
+
+let httpInstance = app.listen(port)
+
+process.on('SIGINT', () => {
+  console.log('gracefully shutting down')
+  httpInstance.close()
+  process.exit(0)
 })
 ```
