@@ -30,16 +30,21 @@ class RouterService {
   }
 
   getRoute() {
-    let currentPath = this.getCurrentPath().slice(1)
+    let currentPath = this.getAdjustedPath(this.getCurrentPath())
     return [...this.paths.keys()]
       .map(this.fromBase64)
-      .filter(r => r !== '/')
-      .find(route => currentPath === route) || this.getCurrentPath()
+      .find(route => currentPath === route)
+  }
+
+  getAdjustedPath(path) {
+    return path.split('/')
+      .filter(pathName => pathName.length)
+      .join('/')
   }
 
   historyChange() {
     const route = this.getRoute()
-    let handlers = this.getPath(route)
+    let handlers = this.getPath(route) || this.getPath('/')
     let req = {load: this.load.bind(this), search: new URLSearchParams(window.location.search)}
     const run = (callbacks) => {
       if (Array.isArray(callbacks) && callbacks.length) {
@@ -75,7 +80,15 @@ class RouterService {
   }
 
   setPath(path, ...callbacks) {
-    this.paths.set(this.toBase64(path), callbacks)
+    path = this.getAdjustedPath(path)
+    if (path.length) {
+      this.paths.set(this.toBase64(path), callbacks)
+    }
+    return this
+  }
+
+  defaultPath(...callbacks) {
+    this.paths.set(this.toBase64('/'), callbacks)
     return this
   }
 

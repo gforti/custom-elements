@@ -9,9 +9,10 @@ module.exports = {
     contentBase: resolve(__dirname, 'dist'),
     historyApiFallback: {
       rewrites: [
-        { from: /.*\.html/, to: '/' },
-        { from: /^[\w\/]+$/, to: '/' },
-      ]
+        { from: /.*\.html?/, to: '/' },
+        { from: /^[\w/]+$/, to: '/' },
+      ],
+      verbose: true
     },
     open: true,
     port: 9000,

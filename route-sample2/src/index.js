@@ -97,6 +97,7 @@ const five = (req, next) => {
 
 const start = (req, next) => {
   if (req.search.get('page') === '1') {
+
     req.load('test2')
     five(req, next)
   } else {
@@ -105,9 +106,9 @@ const start = (req, next) => {
 }
 
 routerService
-  .setPath('/', start)
   .setPath('test/test', one, two, three)
-  .setPath('test/s2', three, one, four, five)
+  .setPath('test', three, one, four, five)
+  .defaultPath(start)
 
 
 const favicon = document.querySelector('#favicon').href
