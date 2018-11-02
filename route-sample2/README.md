@@ -55,7 +55,7 @@ https://stylelint.io/user-guide/rules/
 
 | IE / Edge | Firefox | Chrome | Safari | Opera | iOS | Android |
 |:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|:---------:|
-| &Cross; | &Cross; | &check; | &check; | &Cross; | &check; | &check;
+| &cross; | &Cross; | &check; | &check; | &Cross; | &check; | &check;
 
 
 ## Fix server redirects
