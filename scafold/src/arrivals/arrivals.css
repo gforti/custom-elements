@@ -1,0 +1,28 @@
+.test-table {
+  border-spacing: 0;
+}
+
+.test-table th,
+.test-table td {
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem;
+  text-transform: capitalize;
+}
+
+.test-table th {
+  border-bottom-width: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.test-table tr:hover {
+  background-color: transparent;
+}
+
+.test-table tbody tr:last-child > td  {
+ border-bottom-width: 0;
+}
+
+.test-table tbody tr:last-child > td  {
+ border-bottom-width: 0;
+}

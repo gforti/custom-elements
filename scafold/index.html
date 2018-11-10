@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base href="/">
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link data-id="favicon" rel="shortcut icon" sizes="16x16 32x32 48x48" type="image/png" href="assets/favicon-32x32.png">
+    </head>
+    <body>
+        <header data-automation-id="main-header">
+            <section>
+              <div class="header-title">
+                <img src="assets/logo.svg" class="header-logo" />
+                <div class="header-sub-title">Sub Title</div>
+              </div>
+            </section>
+            <nav>
+                <route-link data-route="/" data-title="Home Page">Home</route-link>
+                <route-link data-route="/arrivals" data-title="Arrivals">Arrivals</route-link>
+            </nav>
+        </header>
+
+        <section class="main" data-automation-id="main-content">
+            <route-display></route-display>
+        </section>
+
+    </body>
+</html>

@@ -1,0 +1,51 @@
+[
+  {
+    "_id": "59a4abad444aea59a211cc27",
+    "isActive": false,
+    "username": "Carr",
+    "email": "hutchinsoncarr@speedbolt.com",
+    "registered": "2017-05-21 07:09:03"
+  },
+  {
+    "_id": "59a4abad312f3a7c5702f071",
+    "isActive": true,
+    "username": "Patton",
+    "email": "hutchinsonpatton@speedbolt.com",
+    "registered": "2014-09-12 11:03:02"
+  },
+  {
+    "_id": "59a4abadba2d54899a0de4c5",
+    "isActive": true,
+    "username": "Hammond",
+    "email": "hutchinsonhammond@speedbolt.com",
+    "registered": "2014-01-07 04:02:46"
+  },
+  {
+    "_id": "59a4abad40f6013142f9e167",
+    "isActive": false,
+    "username": "Mcfadden",
+    "email": "hutchinsonmcfadden@speedbolt.com",
+    "registered": "2014-07-23 02:25:32"
+  },
+  {
+    "_id": "59a4abad70f843e26b83126b",
+    "isActive": true,
+    "username": "Olson",
+    "email": "hutchinsonolson@speedbolt.com",
+    "registered": "2014-12-19 11:45:43"
+  },
+  {
+    "_id": "59a4abad280ca41ce20c2788",
+    "isActive": true,
+    "username": "Black",
+    "email": "hutchinsonblack@speedbolt.com",
+    "registered": "2017-06-19 12:11:37"
+  },
+  {
+    "_id": "59a4abad69045da50f80f419",
+    "isActive": false,
+    "username": "Byrd",
+    "email": "hutchinsonbyrd@speedbolt.com",
+    "registered": "2015-08-31 05:06:19"
+  }
+]
