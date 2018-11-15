@@ -1,5 +1,3 @@
-import templateCache from '../templateCache.js'
-
 class RouterService {
 
   constructor() {
@@ -109,7 +107,7 @@ class RouterService {
 
   _load(content) {
     if (document.body.contains(this.routeDisplay)) {
-      this.routeDisplay.dataset.content = templateCache.get(content)
+      this.routeDisplay.dataset.content = content
     }
     return this
   }

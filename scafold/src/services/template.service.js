@@ -11,7 +11,6 @@ class TemplateService extends Observable {
       return this.instance
     }
     this.instance = this
-    this._http = new HttpFetch()
     this._payload
   }
 
@@ -20,9 +19,12 @@ class TemplateService extends Observable {
   }
 
   getList() {
-    this._http.get(EndPoints.TEST).subscribe(payload => {
-      this._payload = payload
-      this.announcePayload()
+    new HttpFetch().get(EndPoints.TEST).subscribe({
+      error: this.notifyError.bind(this),
+      next: (payload) => {
+        this._payload = payload
+        this.announcePayload()
+      },
     })
   }
 

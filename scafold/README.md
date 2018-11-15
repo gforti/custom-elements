@@ -2,7 +2,11 @@
 
 2018
 
-## Prerequisites
+### GIT Versioning
+
+We use [SemVer](http://semver.org/) for versioning a release. For the versions available, see the `tags` on this repository.
+
+## Installation
 
 The following software is required.
 
@@ -13,9 +17,6 @@ The following software is required.
 | Node  | NPM | Git |
 |:---------:|:---------:|:---------:|
 |  v.8+ | v.5+ | &check; |
-
-
-## Installation
 
 Once the repository is cloned go into the root folder where the `package.json` file
 is located and enter the following command in the terminal.
@@ -182,20 +183,20 @@ For links to change the url use the custom element `<route-link>`
 ```
 The browser url will change to `http://localhost:9000/home` when clicked on.
 
-> Route params will be supported soon e.g.  `data-route="home/:id`
+> Route params are supported e.g.  `data-route="home/:id`
 
 To handle these changes in JavaScript the `RouterService` class
 
 ```js
 import { RouterService } from './route/index.js'
 
-const homeControler = (req, next) => {
+const homeController = (req, next) => {
   req.load('default')
   next()
 }
 
 RouterService
-  .setPath('/home', homeControler)
+  .setPath('/home', homeController)
   .setPath('/about', aboutCallbackFunction)
 ```
 > The `req.load` function will set the custom element  `<route-display>` with the html data.
@@ -204,13 +205,13 @@ The html file named `default.html` will be saved with the key 'default' in a fil
 
 #### Routing Path
 
-All routing paths are aboslute but a parameter can be added with a colon `:`.
+All routing paths are absolute but a parameter can be added with a colon `:`.
 
 ```js
 RouterService
-  .setPath('/alerts/:id', alertControler)
-  .setPath('/alerts/:id?', alertControlerOptional)
-  .setPath('/alerts/:id/warn/:status?', alertWarnControlerOptional)
+  .setPath('/alerts/:id', alertController)
+  .setPath('/alerts/:id?', alertControllerOptional)
+  .setPath('/alerts/:id/warn/:status?', alertWarnControllerOptional)
 ```
 
 > Adding a question mark `?` will make the param optional.
@@ -218,21 +219,46 @@ RouterService
 The `req` object will have a object key named `params` that will have the params and the values found from the url.
 
 ```js
-const homeControler = (req, next) => {
+const homeController = (req, next) => {
   req.params.id
   req.params.status
   next()
 }
 ```
+### Service Layer
 
+Use the file `./src/services/template.service.js` as a starter file to create services.  Not all services are shared and need to be put into the `./src/services` folder. They can be placed in the feature folder. Two helper files `observables.js` and `http-fetch.js` can use used with these services.
 
+- All business logic should be placed in a service
+- Services should mainly be a `singleton`
+- Services can be placed in a `Feature Folder` if not used by multiple files
 
+### Assets
 
-- Service Layer
-- Feature Folders
-- Assets
-- Custom Elements (Shared Widgets)
-- Template Caching
+This is where images, documents etc. will go and be referenced. The folder `assets` can be found in the root directory.
+
+### Feature Folders
+
+Feature folders will group all coding content related to that feature. These folders should be created in the `./src/` folder.  
+
+An arrivals feature might include the `.html` page, the `.css` file and any `.js` files such as services, helper or any related files.  It must include an `index.js` file that will be used to import all files and logic needed for that feature. 
+
+Once completed the `index.js` file should be imported to the `./src/main.js` file.
+
+- The `.html` file must be unique for the `Template/HTML Caching`
+
+### Template Caching
+
+All html pages in the feature folder, excluding the `index.html` will be copied into a file called `html-cache.js`. This file is to be used to load in the html to the `<router-display>`
+
+- Note that the `index.html` is the main layout
+- JavaScript logic should not be in the html files
+
+### Custom Elements (Shared Widgets)
+
+Custom elements are found in `./src/widgets` and are shared throughout the app.  These are custom HTML tags created for reusability. 
+
+> At the moment shadow dom's use is to be limited due to browser support for allowing override styles.
 
 ### Debuging tricks
 

@@ -27,6 +27,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.svg$/,
+        use : ['svg-url-loader']
       }
     ]
   },
@@ -40,7 +44,7 @@ module.exports = {
       chunks: ['vendor', 'index'],
       filename: './index.html',
       hash: true,
-      template: './index.html',
+      template: './src/index.html',
       title: '',
     }),
     new CopyWebpackPlugin([

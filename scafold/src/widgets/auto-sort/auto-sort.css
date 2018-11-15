@@ -1,0 +1,142 @@
+auto-sort {
+  color: #52545b;
+  font-family: sans-serif;
+}
+
+row-sort,
+auto-sort > #header {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+}
+
+row-sort {
+  border-bottom: 1px solid #ddd;
+  padding: 0.2rem 0;
+}
+
+auto-sort > row-sort:last-child {
+  border-bottom-width: 0;
+}
+
+col-sort {
+  align-self: center;
+  padding: 0.5rem 0;
+}
+
+auto-sort row-sort:nth-child(odd) {
+  background-color: #fff;
+}
+
+auto-sort row-sort:nth-child(even) {
+  background-color: #fff;
+}
+
+auto-sort #header {
+  border-bottom: 2px solid #ddd;
+  font-weight: 600;
+}
+
+auto-sort #header col-sort {
+  border-right: 0 solid #d9d9d9;
+  font-size: 0.84rem;
+  padding-left: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+auto-sort #header col-sort:last-child {
+  border-right-width: 0;
+}
+
+.row-sort-exit-transition {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.row-sort-animate {
+  animation-duration: 0.4s;
+  animation-name: fade;
+}
+
+.row-sort-new-animate {
+  animation-duration: 0.2s;
+  animation-name: slide;
+}
+
+.col-sort-animate {
+  animation-duration: 0.6s;
+  animation-name: color;
+}
+
+@keyframes slide {
+  from {
+    opacity: 0.2;
+    margin-left: -100vw;
+    margin-right: 100vw;
+  }
+  to {
+    opacity: 1;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes color {
+  from {
+    background-color: #357bfe;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  row-sort {
+    border-bottom: 1px solid #ddd;
+    display: grid;
+    grid-auto-flow: row;
+    grid-auto-rows: 0fr;
+    padding: 0;
+  }
+
+  row-sort:last-child {
+    border-bottom-width: 0;
+  }
+
+  auto-sort div#header {
+    left: -9999em;
+    position: absolute;
+    top: -9999em;
+  }
+
+  row-sort col-sort {
+    display: flex;
+    flex-direction: column;
+    padding-left: 3rem;
+  }
+
+  row-sort col-sort::before {
+    content: attr(data-col-label);
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  row-sort col-sort + col-sort {
+    margin-top: 0;
+  }
+
+  auto-sort row-sort:nth-child(even) {
+    background-color: #f4f4f4;
+  }
+
+}

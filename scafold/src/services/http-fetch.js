@@ -5,7 +5,7 @@ export default class HttpFetch extends Observable {
     super()
   }
 
-  httpFetch(url, body, verb) {
+  _httpFetch(url, body, verb) {
     let myHeaders = new Headers()
     myHeaders.set('Content-Type', 'application/json')
     let myInit = { cache: 'default', headers: myHeaders, method: verb, mode: 'cors' }
@@ -16,19 +16,26 @@ export default class HttpFetch extends Observable {
     return fetch(myRequest)
       .then(response => {
         if (!response.ok) {
-          throw Error(response)
+          throw Error(response.statusText)
         }
         return response.json()
       })
       .then(json => this.notify(json))
-      .catch(error => this.notify(error))
+      .catch(error => this.notifyError(error))
   }
 
-  get(url) {
+  generateUrlParams(params = {}) {
+    return `?${Object.keys(params).map(k => [k, params[k]].map(window.encodeURIComponent).join('=')).join('&')}`
+  }
+
+  get(url, params = null) {
+    if (params) {
+      url += this.generateUrlParams(params)
+    }
     return {
       subscribe: (f) => {
         const unsubscribe = this.subscribe.call(this, f)
-        this.httpFetch(url, null, 'GET')
+        this._httpFetch(url, null, 'GET')
         return unsubscribe
       }
     }
@@ -38,7 +45,7 @@ export default class HttpFetch extends Observable {
     return {
       subscribe: (f) => {
         const unsubscribe = this.subscribe.call(this, f)
-        this.httpFetch(url, body, 'POST')
+        this._httpFetch(url, body, 'POST')
         return unsubscribe
       }
     }
@@ -48,7 +55,7 @@ export default class HttpFetch extends Observable {
     return {
       subscribe: (f) => {
         const unsubscribe = this.subscribe.call(this, f)
-        this.httpFetch(url, body, 'PUT')
+        this._httpFetch(url, body, 'PUT')
         return unsubscribe
       }
     }
@@ -58,7 +65,7 @@ export default class HttpFetch extends Observable {
     return {
       subscribe: (f) => {
         const unsubscribe = this.subscribe.call(this, f)
-        this.httpFetch(url, null, 'DELETE')
+        this._httpFetch(url, null, 'DELETE')
         return unsubscribe
       }
     }
