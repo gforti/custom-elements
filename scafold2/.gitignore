@@ -1,0 +1,21 @@
+.DS_Store
+.envrc
+*.log
+/coverage
+/dist/*
+/src/html-cache.js
+node_modules/
+Thumbs.db
+
+# IDE
+.vscode/*
+.vs/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+/nbproject/
+
+# SonarQube
+.scannerwork/**
