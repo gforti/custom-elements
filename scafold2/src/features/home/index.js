@@ -1,4 +1,3 @@
-import './default.css'
 import HtmlCache from '../../html-cache.js'
 import { RouterService } from '../../services/route/index.js'
 

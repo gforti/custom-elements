@@ -10,7 +10,12 @@ window.customElements.define('route-display', class extends HTMLElement {
     if (this.content !== content) {
       this.content = content
       const doc = new DOMParser().parseFromString(this.content, 'text/html')
-      this.innerHTML = doc.body.innerHTML.toString()
+      const template = doc.querySelector('template')
+      const style = doc.querySelector('style')
+      this.innerHTML = template.innerHTML.toString()
+      if(style) {
+        this.insertAdjacentHTML('afterbegin', style.outerHTML)
+      }
     }
   }
 
