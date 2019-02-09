@@ -10,7 +10,7 @@ class RouterService {
     this._basePath = window.location.origin
     this._exitFn = null
     this.paramRegex = /[:*](\w+)/g
-    this.lastRoutePath = window.sessionStorage.getItem('last-route-path') || '' // NOSONAR last-route-path allowed
+    this.lastRoutePath = window.sessionStorage.getItem('last-route-path') || ''
     this.historyChangeBind = this.historyChange.bind(this)
     window.addEventListener('url-change', this.historyChangeBind)
     window.addEventListener('popstate', this.historyChangeBind)

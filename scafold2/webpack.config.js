@@ -22,18 +22,6 @@ module.exports = {
     index: './src/main.js',
     // vendor: Object.keys(package.dependencies)
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.svg$/,
-        use: ['svg-url-loader']
-      }
-    ]
-  },
   output: {
     filename: '[name].js',
     path: resolve(__dirname, 'dist')
@@ -49,6 +37,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       { from: './assets', ignore: ['*.js'], to: 'assets' },
+      { from: './src/main.css', to: 'main.css' },
       { from: 'serve.template.js', to: 'serve.js' },
       { from: 'package.template.json', to: 'package.json' },
       { from: 'LICENSE.md', to: 'LICENSE.md' },

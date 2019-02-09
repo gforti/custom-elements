@@ -1,2 +1,2 @@
 import './auto-sort.js'
-import './auto-sort.css'
+// need to fix css import

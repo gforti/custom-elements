@@ -1,2 +1,2 @@
-import './home/index.js'
-import './test/index.js'
+import './home.js'
+import './test.js'

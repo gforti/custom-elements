@@ -1,6 +1,6 @@
-import { TestService, Util } from '../../services/index.js'
-import HtmlCache from '../../html-cache.js'
-import { RouterService } from '../../services/route/index.js'
+import { TestService, Util } from '../services/index.js'
+import HtmlCache from '../html-cache.js'
+import { RouterService } from '../services/route/index.js'
 
 const testCtrl = (req, next) => {
 
