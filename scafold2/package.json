@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "lint:js": "./node_modules/.bin/eslint -c ./.eslintrc --ext .js ./src",
-    "lint:css": "./node_modules/.bin/stylelint ./src/**/*.css",
+    "lint:css": "./node_modules/.bin/stylelint './src/**/*.css' .'/src/**/*.html'",
     "lint": "npm run lint:css && npm run lint:js",
     "build:cache": "node build.js",
     "build:release": "npm run build:cache && webpack --mode production --config webpack.config.js",
