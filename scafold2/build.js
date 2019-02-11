@@ -28,7 +28,7 @@ async function main() {
 
   await writeFileProms(resolve(DIR, 'html-cache.js'), html.join('\n'))
 
-  console.log('The file was saved!')
+  console.log('\x1b[32m The file was saved! \x1b[0m')
   process.exit(0)
 }
 
@@ -37,9 +37,9 @@ function escapeHTMLContent(html) {
 }
 
 async function getFiles(dir) {
-  const subDirs = await readdirProms(dir);
+  const subDirs = await readdirProms(dir)
   const files = await Promise.all(subDirs.map(async (subDirs) => {
-    const res = resolve(dir, subDirs);
+    const res = resolve(dir, subDirs)
     return (await statProms(res)).isDirectory() ? getFiles(res) : res
   }))
   return files
