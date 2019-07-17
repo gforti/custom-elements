@@ -1,0 +1,89 @@
+<html>
+
+<body>
+  <div></div>
+
+  <script>
+
+  let test ='<p>value</p>'
+  let test2 ='value2'
+  const div = window.document.querySelector('div')
+
+
+  let result = tester`<div>this is a ${test} and the other ${test2}</div>`
+
+  function tester(template, ...expressions) {
+      console.log(template, expressions)
+        return template.reduce((accumulator, part, i) => {
+        return accumulator + '<!-- -->' + expressions[i - 1] + part
+    })
+  }
+
+  console.log(result)
+
+  div.insertAdjacentHTML('beforeend', result)
+
+
+  
+
+  let results = '<div>this is a ${test} and the other ${test2}</div>'
+  let regex = /(\${.+?})/gi
+  let expressions = results.match(regex)
+  let nodes = tree()
+
+window.setTimeout(update, 1000)
+
+  function parseHTML(html) {
+    var t = document.createElement('template');
+    t.innerHTML = html;
+    return t.content.cloneNode(true);
+}
+  
+
+  function update() {
+    let params = {
+      test: '<p>new value</p>',
+      test2: 'new value2'
+    }
+
+    nodes.forEach( (node, i) => {
+      //node.nextSibling
+
+      const newVal = interpolate(expressions[i], params)
+      const newElem = parseHTML(newVal)
+
+      //node.nextSibling.remove
+      //node.insertAdjacentHTML('beforeend', newVal);
+
+      node.parentNode.replaceChild(newElem, node.nextSibling);
+    })
+  }
+
+  function interpolate(template, params) {
+      const keys = Object.keys(params)
+      let keyValues = Object.values(params)
+      return new Function(...keys, `return \`${template}\``)(...keyValues)
+  }
+
+  function tree() {
+        let walker = document.createTreeWalker(
+        div,
+        NodeFilter.SHOW_COMMENT,
+        { acceptNode: function (node) { return NodeFilter.FILTER_ACCEPT; } },
+        false
+        );
+
+        let nodeList = [];
+
+        while (walker.nextNode()) nodeList.push(walker.currentNode);
+
+        console.log(nodeList)
+      return nodeList
+        
+    }
+    
+  </script>
+
+</body>
+
+</html>
