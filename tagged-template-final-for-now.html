@@ -25,13 +25,14 @@
                 this.updateModel(defaultModel)
             }
 
-            render(target, templateString) {
+            async render(target, templateString) {
                 const frag = this._markerTree(templateString)
                 if (document.body.contains(target)) {
                     target.appendChild(frag)
-                    this._referenceTree(target)
-                    this.update()
+                    await this._referenceTree(target)
+                    await this.update()
                 }
+                return Promise.resolve(true)
             }
 
             updateModel(obj = {}) {
@@ -84,10 +85,10 @@
                 const keys = Object.keys(params)
                 let keyValues = Object.values(params)
                 const returnFn = useMarkers ? `function markers (template, ...expressions) {
-                    return template.reduce((accumulator, part, i) =>
-                        \`\${accumulator}<!-- -->\${expressions[i - 1]}\${part}\`
-                    )
-                } return markers\`${template}\`` : `return \`${template}\``
+          return template.reduce((accumulator, part, i) =>
+              \`\${accumulator}<!-- -->\${expressions[i - 1]}\${part}\`
+          )
+      } return markers\`${template}\`` : `return \`${template}\``
                 return new Function(...keys, returnFn)(...keyValues)
             }
 
@@ -113,7 +114,7 @@
                         this.referenceNodes.add({ node, value: node.nodeValue })
                     }
                 }
-
+                return Promise.resolve(true)
             }
 
             update() {
@@ -126,18 +127,21 @@
                         node.value = newVal
                     }
                 })
+                return Promise.resolve(true)
             }
 
         }
 
-        
-        
-        let params = {
+
+        (async () => {
+  
+            let params = {
             test: '<p>new value</p>',
             test2: 'new value2',
             test3: 'red',
             wow: 'acb12345',
-            notwork: 'acb12345'
+            notwork: 'acb12345',
+            more: 'wow this works'
         }
 
         let params2 = {
@@ -145,17 +149,24 @@
             test2: 'newer value2',
             test3: 'blue',
             wow: 'acb12345',
-            notwork: '12345abc'
+            notwork: '12345abc',
+            more: 'wow this REALLLLY works'
         }
-        const template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div id="${notwork}">inner</div></div>'
+        const template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div class="inner" id="${notwork}">inner</div></div>'
+        const templateMore = '<p>${more}</p>'
         const divElement = window.document.querySelector('div')
         const htmlMarker = new HtmlMarker(params)
-        htmlMarker.render(divElement, template)
+        await htmlMarker.render(divElement, template)
+        const divElement2 = window.document.querySelector('div.inner')
+        await htmlMarker.render(divElement2, templateMore)
+        console.log(htmlMarker.referenceNodes)
 
         window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 1500)
         window.setTimeout(htmlMarker.update.bind(htmlMarker), 1000)
         window.setTimeout(htmlMarker.update.bind(htmlMarker), 3000)
-        
+
+        })()
+
     </script>
 
 </body>
