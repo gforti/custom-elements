@@ -1,0 +1,163 @@
+<html>
+
+<head>
+    <style>
+        .red {
+            color: red;
+        }
+
+        .blue {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+
+    <script>
+
+        class HtmlMarker {
+            constructor(defaultModel) {
+                this.regex_literal = /(\${.+?})/gi
+                this.referenceNodes = new Set()
+                this.model = {}
+                this.updateModel(defaultModel)
+            }
+
+            render(target, templateString) {
+                const frag = this._markerTree(templateString)
+                if (document.body.contains(target)) {
+                    target.appendChild(frag)
+                    this._referenceTree(target)
+                    this.update()
+                }
+            }
+
+            updateModel(obj = {}) {
+                Object.assign(this.model, obj)
+            }
+
+            _fragmentFromString(strHTML) {
+                const template = document.createElement('template')
+                template.innerHTML = strHTML
+                return template.content.cloneNode(true)
+            }
+
+            _markerTree(templateString) {
+                const rootElement = this._fragmentFromString(templateString)
+                const walker = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                )
+                let expressions = []
+                while (walker.nextNode()) {
+                    const node = walker.currentNode
+                    expressions = expressions.concat(node.nodeValue.trim().match(this.regex_literal))
+                    const template = node.nodeValue.trim()
+                    const html = this._interpolate({ template, params: this.model, useMarkers: true })
+                    const newNode = this._parseHTML(html)
+                    node.parentNode.replaceChild(newNode, node)
+                }
+                const walkerComments = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_COMMENT,
+                    null,
+                    false
+                )
+                let i = 0
+                while (walkerComments.nextNode()) {
+                    walkerComments.currentNode.textContent = expressions[i++]
+                }
+                return rootElement
+            }
+
+            _parseHTML(html) {
+                const t = document.createElement('template')
+                t.innerHTML = html
+                return t.content.cloneNode(true)
+            }
+
+            _interpolate({ template, params, useMarkers = false }) {
+                const keys = Object.keys(params)
+                let keyValues = Object.values(params)
+                const returnFn = useMarkers ? `function markers (template, ...expressions) {
+                    return template.reduce((accumulator, part, i) =>
+                        \`\${accumulator}<!-- -->\${expressions[i - 1]}\${part}\`
+                    )
+                } return markers\`${template}\`` : `return \`${template}\``
+                return new Function(...keys, returnFn)(...keyValues)
+            }
+
+            _referenceTree(rootElement) {
+                const walker = document.createTreeWalker(
+                    rootElement,
+                    NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_ELEMENT,
+                    null,
+                    false
+                )
+                while (walker.nextNode()) {
+                    const node = walker.currentNode
+                    if (node.nodeType === Node.ELEMENT_NODE && node.hasAttributes()) {
+                        const attrs = [...node.attributes]
+                        attrs.forEach(attr => {
+                            const hasLiteral = attr.value.match(this.regex_literal)
+                            if (hasLiteral) {
+                                this.referenceNodes.add({ node: attr, value: attr.value })
+                            }
+                        })
+                    }
+                    if (node.nodeType === Node.COMMENT_NODE) {
+                        this.referenceNodes.add({ node, value: node.nodeValue })
+                    }
+                }
+
+            }
+
+            update() {
+                this.referenceNodes.forEach(({ node, value }, i) => {
+                    const newVal = this._interpolate({ template: value, params: this.model })
+                    if (node.nodeType === Node.COMMENT_NODE) {
+                        const newNode = this._parseHTML(newVal)
+                        node.parentNode.replaceChild(newNode, node.nextSibling)
+                    } else if (node.nodeType === Node.ATTRIBUTE_NODE) {
+                        node.value = newVal
+                    }
+                })
+            }
+
+        }
+
+        
+        
+        let params = {
+            test: '<p>new value</p>',
+            test2: 'new value2',
+            test3: 'red',
+            wow: 'acb12345',
+            notwork: 'acb12345'
+        }
+
+        let params2 = {
+            test: '<span>new new value</span>',
+            test2: 'newer value2',
+            test3: 'blue',
+            wow: 'acb12345',
+            notwork: '12345abc'
+        }
+        const template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div id="${notwork}">inner</div></div>'
+        const divElement = window.document.querySelector('div')
+        const htmlMarker = new HtmlMarker(params)
+        htmlMarker.render(divElement, template)
+
+        window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 1500)
+        window.setTimeout(htmlMarker.update.bind(htmlMarker), 1000)
+        window.setTimeout(htmlMarker.update.bind(htmlMarker), 3000)
+        
+    </script>
+
+</body>
+
+</html>
