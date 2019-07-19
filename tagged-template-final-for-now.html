@@ -37,6 +37,7 @@
 
             updateModel(obj = {}) {
                 Object.assign(this.model, obj)
+                return this.update()
             }
 
             _fragmentFromString(strHTML) {
@@ -161,9 +162,8 @@
         await htmlMarker.render(divElement2, templateMore)
         console.log(htmlMarker.referenceNodes)
 
-        window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 1500)
-        window.setTimeout(htmlMarker.update.bind(htmlMarker), 1000)
-        window.setTimeout(htmlMarker.update.bind(htmlMarker), 3000)
+        window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 2000)
+      
 
         })()
 
