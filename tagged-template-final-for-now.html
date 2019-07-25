@@ -16,17 +16,17 @@
     <div></div>
 
     <script>
-
+        const REGEX_LITERAL = /(\${.+?})/gi
         class HtmlMarker {
             constructor(defaultModel) {
-                this.regex_literal = /(\${.+?})/gi
                 this.referenceNodes = new Set()
                 this.model = {}
                 this.updateModel(defaultModel)
             }
 
             async render(target, templateString) {
-                const frag = this._markerTree(templateString)
+                const rootElement = this._fragmentFromString(templateString)
+                const frag = this._markerTree(rootElement)
                 if (document.body.contains(target)) {
                     target.appendChild(frag)
                     await this._referenceTree(target)
@@ -46,22 +46,49 @@
                 return template.content.cloneNode(true)
             }
 
-            _markerTree(templateString) {
-                const rootElement = this._fragmentFromString(templateString)
+            _markChildNodes(childNodes) {
+                let expressions = []
+                Array.from(childNodes).forEach(node => {
+                    if (node.hasChildNodes()) {
+                        expressions = expressions.concat(this._markChildNodes(node.childNodes))
+                    }
+                    if (node.nodeValue && node.nodeValue.trim().length) {
+                        const matches = node.nodeValue.trim().match(REGEX_LITERAL)
+                        if (matches) {
+                            expressions = expressions.concat(matches)
+                            const template = node.nodeValue.trim()
+                            const html = this._interpolate({ params: this.model, template, useMarkers: true })
+                            const newNode = this._parseHTML(html)
+                            node.parentNode.replaceChild(newNode, node)
+                        }
+                    }
+                })
+                return expressions
+            }
+
+            _markerTree(rootElement) {
                 const walker = document.createTreeWalker(
                     rootElement,
-                    NodeFilter.SHOW_TEXT,
+                    NodeFilter.SHOW_ALL,
                     null,
                     false
                 )
                 let expressions = []
                 while (walker.nextNode()) {
                     const node = walker.currentNode
-                    expressions = expressions.concat(node.nodeValue.trim().match(this.regex_literal))
-                    const template = node.nodeValue.trim()
-                    const html = this._interpolate({ template, params: this.model, useMarkers: true })
-                    const newNode = this._parseHTML(html)
-                    node.parentNode.replaceChild(newNode, node)
+                    if (node.hasChildNodes()) {
+                        expressions = expressions.concat(this._markChildNodes(node.childNodes))
+                    }
+                    if (node.nodeValue && node.nodeValue.trim().length) {
+                        const matches = node.nodeValue.trim().match(REGEX_LITERAL)
+                        if (matches) {
+                            expressions = expressions.concat(matches)
+                            const template = node.nodeValue.trim()
+                            const html = this._interpolate({ params: this.model, template, useMarkers: true })
+                            const newNode = this._parseHTML(html)
+                            node.parentNode.replaceChild(newNode, node)
+                        }
+                    }
                 }
                 const walkerComments = document.createTreeWalker(
                     rootElement,
@@ -82,12 +109,12 @@
                 return t.content.cloneNode(true)
             }
 
-            _interpolate({ template, params, useMarkers = false }) {
+            _interpolate({ params, template, useMarkers = false }) {
                 const keys = Object.keys(params)
                 let keyValues = Object.values(params)
                 const returnFn = useMarkers ? `function markers (template, ...expressions) {
           return template.reduce((accumulator, part, i) =>
-              \`\${accumulator}<!-- -->\${expressions[i - 1]}\${part}\`
+              \`\${accumulator}<!----><span>\${expressions[i - 1]}</span>\${part}\`
           )
       } return markers\`${template}\`` : `return \`${template}\``
                 return new Function(...keys, returnFn)(...keyValues)
@@ -105,65 +132,155 @@
                     if (node.nodeType === Node.ELEMENT_NODE && node.hasAttributes()) {
                         const attrs = [...node.attributes]
                         attrs.forEach(attr => {
-                            const hasLiteral = attr.value.match(this.regex_literal)
-                            if (hasLiteral) {
-                                this.referenceNodes.add({ node: attr, value: attr.value })
+                            const hasLiteral = attr.value.match(REGEX_LITERAL)
+                            const isLiteralName = attr.name.match(REGEX_LITERAL)
+                            if (hasLiteral || isLiteralName) {
+                                this.referenceNodes.add({
+                                    name: attr.name,
+                                    node: attr,
+                                    oldName: null,
+                                    oldValue: null,
+                                    value: attr.value
+                                })
                             }
                         })
                     }
                     if (node.nodeType === Node.COMMENT_NODE) {
-                        this.referenceNodes.add({ node, value: node.nodeValue })
+                        this.referenceNodes.add({ node, oldValue: null, value: node.nodeValue })
                     }
                 }
                 return Promise.resolve(true)
             }
 
             update() {
-                this.referenceNodes.forEach(({ node, value }, i) => {
-                    const newVal = this._interpolate({ template: value, params: this.model })
-                    if (node.nodeType === Node.COMMENT_NODE) {
-                        const newNode = this._parseHTML(newVal)
-                        node.parentNode.replaceChild(newNode, node.nextSibling)
-                    } else if (node.nodeType === Node.ATTRIBUTE_NODE) {
-                        node.value = newVal
+                this.referenceNodes.forEach(({ name = '', node, oldName = '', oldValue = null, value }, reference) => {
+                    let newValue = this._interpolate({ params: this.model, template: value })
+                    if (newValue !== oldValue) {
+                        if (node.nodeType === Node.COMMENT_NODE) {
+                            const newNode = this._parseHTML(`<span>${newValue}</span>`)
+                            node.parentNode.replaceChild(newNode, node.nextSibling)
+                        } else if (node.nodeType === Node.ATTRIBUTE_NODE) {
+                            if (node.nodeName === 'class') {
+                                newValue = this._handleClassValue({ node, oldValue, value })
+                            } else {
+                                node.value = newValue
+                            }
+                        }
                     }
+                    let newName = this._interpolate({ params: this.model, template: name })
+                    if (!value && newName !== oldName) {
+                        const ownerElement = this._getNodeOwnerElement(node)
+                        if (oldName) {
+                            ownerElement.removeAttribute(oldName)
+                        }
+                        if (newName) {
+                            const newAttribute = document.createAttribute(newName)
+                            ownerElement.setAttributeNode(newAttribute)
+                        }
+                    }
+
+                    reference.oldValue = newValue
+                    reference.oldName = newName
                 })
                 return Promise.resolve(true)
             }
 
-        }
+            _handleClassValue({ node, oldValue = '', value }) {
+                const ownerElement = this._getNodeOwnerElement(node)
+                const values = value.split(' ').filter(cls => null !== cls.match(REGEX_LITERAL))
+                let newValFiltered = []
+                let newVal = []
 
+                if (values) {
+                    /* remove starting literal values */
+                    ownerElement.classList.remove(...values)
+                    newVal = this._interpolate({ params: this.model, template: values.join(' ') })
+                    newVal = newVal.split(' ').filter(className => className.length)
+                    if (Array.isArray(newVal)) {
+                        oldValue = Array.isArray(oldValue) ? oldValue : []
+                        /* any old class in the new value can be ignored */
+                        const intersection = newVal.filter(className => oldValue.includes(className))
+                        oldValue = oldValue.filter(className => !intersection.includes(className))
+                        newValFiltered = newVal.filter(className => !intersection.includes(className))
+                    }
+                }
+
+                if (Array.isArray(oldValue) && oldValue.length) {
+                    ownerElement.classList.remove(...oldValue)
+                }
+
+                if (Array.isArray(newValFiltered) && newValFiltered.length) {
+                    ownerElement.classList.add(...newValFiltered)
+                }
+                return newVal
+            }
+
+            _getNodeOwnerElement(node) {
+                let ownerElement = node.ownerElement
+                while (!ownerElement.tagName) {
+                    ownerElement = ownerElement.ownerElement
+                }
+                return ownerElement
+            }
+        }
 
         (async () => {
-  
+
             let params = {
-            test: '<p>new value</p>',
-            test2: 'new value2',
-            test3: 'red',
-            wow: 'acb12345',
-            notwork: 'acb12345',
-            more: 'wow this works'
-        }
+                test: '<p>new value</p>',
+                test2: 'new value2',
+                test3: 'red',
+                wow: 'acb12345',
+                notwork: 'disabled',
+                more: 'wow this works',
+                deep: 'this is deep',
+                deeper: '<strong>this is even more deeper</strong>',
+                deviceID: '12345'
+            }
 
-        let params2 = {
-            test: '<span>new new value</span>',
-            test2: 'newer value2',
-            test3: 'blue',
-            wow: 'acb12345',
-            notwork: '12345abc',
-            more: 'wow this REALLLLY works'
-        }
-        const template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div class="inner" id="${notwork}">inner</div></div>'
-        const templateMore = '<p>${more}</p>'
-        const divElement = window.document.querySelector('div')
-        const htmlMarker = new HtmlMarker(params)
-        await htmlMarker.render(divElement, template)
-        const divElement2 = window.document.querySelector('div.inner')
-        await htmlMarker.render(divElement2, templateMore)
-        console.log(htmlMarker.referenceNodes)
+            let params2 = {
+                test: '<span>new new value</span>',
+                test2: 'newer value2',
+                test3: 'blue',
+                wow: 'acb12345',
+                notwork: '',
+                more: 'wow this REALLLLY works',
+                deep: 'this is deep',
+                deeper: '<strong>this is even more deeper</strong>',
+                deviceID: '54321'
+            }
+            let template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div class="inner" id="${notwork}">${notwork} <div>${deep} <div> whaaaa ${deeper}</div></div></div>'
+            template = '<section  class="device-messages" data-group="main">\
+                  <button ${notwork}>testing</button>\
+                  <header  ${notwork} class="accordion-header expanded device-header">${deviceID}</header>\
+                  <summary class="device-summary expanded">\
+                      <section class="message-section ${deviceID}-C2D" data-group="main">\
+                      <header class="accordion-header expanded detail-grid-header">\
+                          <span class="C2D-header-title"></span>\
+                          <span class="message-count-C2D-${deviceID} subtitle"></span>\
+                      </header>\
+                      <summary class="C2D-messages-${deviceID} detail-summary expanded"></summary>\
+                      </section>\
+                      <section class="message-section ${deviceID}-D2C" data-group="main">\
+                      <header class="accordion-header expanded detail-grid-header">\
+                          <span class="D2C-header-title"></span>\
+                          <span class="message-count-D2C-${deviceID} subtitle"></span>\
+                      </header>\
+                      <summary class="D2C-messages-${deviceID} detail-summary expanded"></summary>\
+                      </section>\
+                  </summary>\
+                  </section>\
+                  '
+            const templateMore = '<p>${more}</p>'
+            const divElement = window.document.querySelector('div')
+            const htmlMarker = new HtmlMarker(params)
+            await htmlMarker.render(divElement, template)
+            //const divElement2 = window.document.querySelector('div.inner')
+            //await htmlMarker.render(divElement2, templateMore)
+            //console.log(htmlMarker.referenceNodes)
 
-        window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 2000)
-      
+            window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 2000)
+
 
         })()
 
