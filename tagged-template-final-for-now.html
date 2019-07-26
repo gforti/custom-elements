@@ -169,7 +169,11 @@
                                     oldValue: null,
                                     value: attr.value
                                 })
+                                if(isBooleanAttr) {
+                                    node.setAttribute(attr.name, '')
+                                }
                             }
+                            
                         })
                     }
                     if (node.nodeType === Node.COMMENT_NODE) {
