@@ -17,6 +17,33 @@
 
     <script>
         const REGEX_LITERAL = /(\${.+?})/gi
+        const BOOLEAN_ATTRIBUTES = [
+            'allowfullscreen',
+            'allowpaymentrequest',
+            'async',
+            'autofocus',
+            'autoplay',
+            'checked',
+            'controls',
+            'default',
+            'defer',
+            'disabled',
+            'formnovalidate',
+            'hidden',
+            'ismap',
+            'itemscope',
+            'loop',
+            'multiple',
+            'muted',
+            'nomodule',
+            'novalidate',
+            'open',
+            'readonly',
+            'required',
+            'reversed',
+            'selected',
+            'typemustmatch'
+        ]
         class HtmlMarker {
             constructor(defaultModel) {
                 this.referenceNodes = new Set()
@@ -133,12 +160,12 @@
                         const attrs = [...node.attributes]
                         attrs.forEach(attr => {
                             const hasLiteral = attr.value.match(REGEX_LITERAL)
-                            const isLiteralName = attr.name.match(REGEX_LITERAL)
-                            if (hasLiteral || isLiteralName) {
+                            const isBooleanAttr = BOOLEAN_ATTRIBUTES.includes(attr.name)
+                            if (hasLiteral) {
                                 this.referenceNodes.add({
+                                    isBooleanAttr,
                                     name: attr.name,
-                                    node: attr,
-                                    oldName: null,
+                                    node: isBooleanAttr ? node : attr,
                                     oldValue: null,
                                     value: attr.value
                                 })
@@ -153,9 +180,9 @@
             }
 
             update() {
-                this.referenceNodes.forEach(({ name = '', node, oldName = '', oldValue = null, value }, reference) => {
+                this.referenceNodes.forEach(({ isBooleanAttr = false,  name = '', node, oldValue = null, value }, reference) => {
                     let newValue = this._interpolate({ params: this.model, template: value })
-                    if (newValue !== oldValue) {
+                    if (!isBooleanAttr && newValue !== oldValue) {
                         if (node.nodeType === Node.COMMENT_NODE) {
                             const newNode = this._parseHTML(`<span>${newValue}</span>`)
                             node.parentNode.replaceChild(newNode, node.nextSibling)
@@ -167,20 +194,10 @@
                             }
                         }
                     }
-                    let newName = this._interpolate({ params: this.model, template: name })
-                    if (!value && newName !== oldName) {
-                        const ownerElement = this._getNodeOwnerElement(node)
-                        if (oldName) {
-                            ownerElement.removeAttribute(oldName)
-                        }
-                        if (newName) {
-                            const newAttribute = document.createAttribute(newName)
-                            ownerElement.setAttributeNode(newAttribute)
-                        }
+                    if (isBooleanAttr) {
+                        node.toggleAttribute(name, !!newValue.length)
                     }
-
                     reference.oldValue = newValue
-                    reference.oldName = newName
                 })
                 return Promise.resolve(true)
             }
@@ -217,7 +234,7 @@
 
             _getNodeOwnerElement(node) {
                 let ownerElement = node.ownerElement
-                while (!ownerElement.tagName) {
+                while (ownerElement && !ownerElement.tagName) {
                     ownerElement = ownerElement.ownerElement
                 }
                 return ownerElement
@@ -231,7 +248,7 @@
                 test2: 'new value2',
                 test3: 'red',
                 wow: 'acb12345',
-                notwork: 'disabled',
+                notwork: 'true',
                 more: 'wow this works',
                 deep: 'this is deep',
                 deeper: '<strong>this is even more deeper</strong>',
@@ -250,27 +267,7 @@
                 deviceID: '54321'
             }
             let template = '<div ${notwork} id="${wow}" class="${test3} cool">this is a ${test} and the other ${test2} <div class="inner" id="${notwork}">${notwork} <div>${deep} <div> whaaaa ${deeper}</div></div></div>'
-            template = '<section  class="device-messages" data-group="main">\
-                  <button ${notwork}>testing</button>\
-                  <header  ${notwork} class="accordion-header expanded device-header">${deviceID}</header>\
-                  <summary class="device-summary expanded">\
-                      <section class="message-section ${deviceID}-C2D" data-group="main">\
-                      <header class="accordion-header expanded detail-grid-header">\
-                          <span class="C2D-header-title"></span>\
-                          <span class="message-count-C2D-${deviceID} subtitle"></span>\
-                      </header>\
-                      <summary class="C2D-messages-${deviceID} detail-summary expanded"></summary>\
-                      </section>\
-                      <section class="message-section ${deviceID}-D2C" data-group="main">\
-                      <header class="accordion-header expanded detail-grid-header">\
-                          <span class="D2C-header-title"></span>\
-                          <span class="message-count-D2C-${deviceID} subtitle"></span>\
-                      </header>\
-                      <summary class="D2C-messages-${deviceID} detail-summary expanded"></summary>\
-                      </section>\
-                  </summary>\
-                  </section>\
-                  '
+            template = '<button id="${wow}" disabled="${notwork}" readonly="${\'readonly\'}">testing</button>'
             const templateMore = '<p>${more}</p>'
             const divElement = window.document.querySelector('div')
             const htmlMarker = new HtmlMarker(params)
@@ -279,7 +276,14 @@
             //await htmlMarker.render(divElement2, templateMore)
             //console.log(htmlMarker.referenceNodes)
 
-            window.setTimeout(htmlMarker.updateModel.bind(htmlMarker, params2), 2000)
+            const btn = window.document.querySelector('button')
+
+            btn.addEventListener('click', () => {
+                btn.disabled = true
+            })
+
+            window.setInterval(htmlMarker.updateModel.bind(htmlMarker, params), 2000)
+            window.setInterval(htmlMarker.updateModel.bind(htmlMarker, params2), 4000)
 
 
         })()
